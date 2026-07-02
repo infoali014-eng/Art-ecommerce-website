@@ -1,5 +1,7 @@
 import { createBrowserClient } from '@supabase/ssr';
 
+import { Database } from '@/types/database';
+
 export const createClient = () => {
   let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   let supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -11,6 +13,6 @@ export const createClient = () => {
     supabaseAnonKey = 'placeholder-anon-key';
   }
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
 };
 export default createClient;

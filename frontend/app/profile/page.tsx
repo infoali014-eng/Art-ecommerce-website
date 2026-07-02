@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { Award, Calendar, CheckCircle, ShieldAlert, User } from 'lucide-react';
@@ -18,6 +19,7 @@ import PasswordStrength from '@/components/ui/PasswordStrength';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { AuthService } from '@/services/auth.service';
+import { ProfileService } from '@/services/profile.service';
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -29,6 +31,34 @@ export default function ProfilePage() {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+
+  const [fullNameState, setFullNameState] = useState('');
+  const [avatarUrlState, setAvatarUrlState] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isProfileUpdating, setIsProfileUpdating] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchProfile = async () => {
+      try {
+        const data = await ProfileService.getProfile(user.id);
+        if (data) {
+          setFullNameState(data.fullName || '');
+          setAvatarUrlState(data.avatarUrl || '');
+        } else {
+          setFullNameState(user.user_metadata?.full_name || 'Art Collector');
+          setAvatarUrlState(user.user_metadata?.avatar_url || '');
+        }
+      } catch (e) {
+        console.error('Failed to load profile details:', e);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+    fetchProfile();
+  }, [user]);
 
   if (loading) {
     return (
@@ -46,7 +76,6 @@ export default function ProfilePage() {
     return null;
   }
 
-  const fullName = user.user_metadata?.full_name || 'Art Collector';
   const email = user.email || '';
   const memberSince = user.created_at
     ? new Date(user.created_at).toLocaleDateString('en-US', {
@@ -64,6 +93,37 @@ export default function ProfilePage() {
       router.push('/');
     } catch {
       addToast('Failed to sign out. Please try again.', 'error');
+    }
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const publicUrl = await ProfileService.uploadAvatar(user.id, file);
+      setAvatarUrlState(publicUrl);
+      addToast('Profile avatar uploaded and saved!', 'success');
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to upload avatar photo.', 'error');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleProfileUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsProfileUpdating(true);
+    try {
+      await ProfileService.updateProfile(user.id, fullNameState, avatarUrlState);
+      addToast('Profile details updated successfully!', 'success');
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to update profile details.', 'error');
+    } finally {
+      setIsProfileUpdating(false);
     }
   };
 
@@ -118,12 +178,34 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
               {/* Profile Card Summary */}
               <div className="bg-white border border-primary/5 p-8 flex flex-col items-center text-center space-y-6">
-                {/* Avatar Placeholder */}
-                <div className="relative w-24 h-24 rounded-full border border-primary/5 bg-[#FAF7F2] flex items-center justify-center text-secondary/40">
-                  <User className="w-10 h-10 stroke-[1.2]" />
+                {/* Avatar Area */}
+                <div className="relative w-24 h-24 rounded-full border border-primary/5 bg-[#FAF7F2] overflow-hidden group">
+                  {avatarUrlState ? (
+                    <Image
+                      src={avatarUrlState}
+                      alt="Avatar"
+                      className="object-cover rounded-full"
+                      fill
+                    />
+                  ) : (
+                    <User className="w-10 h-10 stroke-[1.2] text-secondary/40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  )}
+
+                  {/* Upload Overlay */}
+                  <label className="absolute inset-0 bg-primary/45 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-[10px] text-white uppercase tracking-widest font-semibold cursor-pointer">
+                    <span>{isUploading ? 'Uploading...' : 'Change'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      disabled={isUploading}
+                      className="hidden"
+                    />
+                  </label>
+
                   {isVerified && (
                     <span
-                      className="absolute bottom-1 right-1 bg-white rounded-full p-0.5"
+                      className="absolute bottom-1 right-1 bg-white rounded-full p-0.5 z-10"
                       title="Verified Account"
                     >
                       <CheckCircle className="w-5 h-5 text-emerald-600 fill-emerald-50" />
@@ -134,7 +216,7 @@ export default function ProfilePage() {
                 {/* Meta details */}
                 <div className="space-y-1">
                   <h3 className="font-cormorant text-2xl font-light text-primary tracking-wide">
-                    {fullName}
+                    {isInitialized ? fullNameState : 'Loading...'}
                   </h3>
                   <p className="text-xs text-secondary font-light">{email}</p>
                 </div>
@@ -173,33 +255,46 @@ export default function ProfilePage() {
               {/* Edit Details Panel */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Account Details View */}
-                <div className="bg-white border border-primary/5 p-8 space-y-6">
+                <form
+                  onSubmit={handleProfileUpdate}
+                  className="bg-white border border-primary/5 p-8 space-y-6"
+                >
                   <h3 className="font-cormorant text-2xl font-light text-primary tracking-wide border-b border-primary/5 pb-3">
                     Personal Information
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
                     <div className="space-y-1.5">
-                      <span className="text-secondary font-sans uppercase tracking-wider block">
+                      <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
                         Full Name
-                      </span>
-                      <span className="text-primary font-medium block p-2.5 bg-[#FAF7F2] border border-primary/5">
-                        {fullName}
-                      </span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={fullNameState}
+                        onChange={(e) => setFullNameState(e.target.value)}
+                        className="w-full bg-background border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent text-primary"
+                      />
                     </div>
                     <div className="space-y-1.5">
                       <span className="text-secondary font-sans uppercase tracking-wider block">
                         Email Address
                       </span>
-                      <span className="text-primary font-medium block p-2.5 bg-[#FAF7F2] border border-primary/5">
+                      <span className="text-secondary/60 font-medium block p-2.5 bg-[#FAF7F2] border border-primary/5 select-none">
                         {email}
                       </span>
                     </div>
                   </div>
-                  <p className="text-[10px] text-secondary/60 font-light italic leading-relaxed pt-2">
-                    To modify your collector identity, name changes, or shipping registers, please
-                    contact our curator concierge team.
-                  </p>
-                </div>
+                  <div className="pt-2 flex justify-end">
+                    <LoadingButton
+                      type="submit"
+                      variant="primary"
+                      loading={isProfileUpdating}
+                      className="w-full md:w-auto md:px-8"
+                    >
+                      Save Details
+                    </LoadingButton>
+                  </div>
+                </form>
 
                 {/* Password Change Form */}
                 <div className="bg-white border border-primary/5 p-8 space-y-6">
@@ -229,7 +324,7 @@ export default function ProfilePage() {
                           required
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="w-full bg-background border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent"
+                          className="w-full bg-background border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent text-primary"
                         />
                         <PasswordStrength password={password} />
                       </div>
@@ -243,7 +338,7 @@ export default function ProfilePage() {
                           required
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="w-full bg-background border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent"
+                          className="w-full bg-background border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent text-primary"
                         />
                       </div>
                     </div>

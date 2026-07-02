@@ -33,31 +33,50 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const supabase = createClient();
 
+  // Load initial cart and configure auth state listeners
   useEffect(() => {
-    const storedItems = CartService.getCartItems();
-    setItems(storedItems);
-    setIsInitialized(true);
-  }, []);
+    const initCart = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const currentUserId = session?.user?.id || null;
+        setUserId(currentUserId);
 
-  useEffect(() => {
-    if (!isInitialized) return;
-    CartService.saveCartItems(items);
-  }, [items, isInitialized]);
+        const initialItems = await CartService.getCartItems(currentUserId || undefined);
+        setItems(initialItems);
+      } catch (e) {
+        console.error('Failed to initialize cart:', e);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
 
-  // Guest to User session cart merge routine
-  useEffect(() => {
+    initCart();
+
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      const currentUserId = session?.user?.id || null;
+      setUserId(currentUserId);
+
       if (event === 'SIGNED_IN' && session?.user) {
-        console.log('[Cart] User logged in. Merging guest cart session into account...');
-        // Interface ready for database persistence:
-        // const userCart = await fetchUserCartFromSupabase(session.user.id);
-        // const merged = mergeGuestAndUserCarts(items, userCart);
-        // setItems(merged);
+        // Read guest cart from localStorage prior to merging
+        const localItems = await CartService.getCartItems(undefined);
+        if (localItems.length > 0) {
+          console.log('[Cart] Merging guest cart with user database account...');
+          await CartService.mergeGuestCart(localItems, session.user.id);
+        }
+        const databaseItems = await CartService.getCartItems(session.user.id);
+        setItems(databaseItems);
+      } else if (event === 'SIGNED_OUT') {
+        // Reset to guest items (should be empty after logouts)
+        const guestItems = await CartService.getCartItems(undefined);
+        setItems(guestItems);
       }
     });
 
@@ -65,6 +84,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       subscription.unsubscribe();
     };
   }, [supabase.auth]);
+
+  // Persist items on changes
+  useEffect(() => {
+    if (!isInitialized) return;
+    const persistCart = async () => {
+      await CartService.saveCartItems(items, userId || undefined);
+    };
+    persistCart();
+  }, [items, isInitialized, userId]);
 
   const addItem = (artwork: Artwork, frameOption: string, quantity = 1, notes = '') => {
     setItems((prev) => {
@@ -148,3 +176,4 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </CartContext.Provider>
   );
 };
+export default CartProvider;

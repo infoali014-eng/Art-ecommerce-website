@@ -17,7 +17,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const artwork = ArtworkService.getArtworkBySlug(slug);
+  const artwork = await ArtworkService.getArtworkBySlug(slug);
 
   if (!artwork) {
     return {
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // Generate static routes at build time for optimization
 export async function generateStaticParams() {
-  const artworks = ArtworkService.getAllArtworks();
+  const artworks = await ArtworkService.getAllArtworks();
   return artworks.map((art) => ({
     slug: art.slug,
   }));
@@ -46,14 +46,14 @@ export async function generateStaticParams() {
 
 export default async function ArtworkPage({ params }: PageProps) {
   const { slug } = await params;
-  const artwork = ArtworkService.getArtworkBySlug(slug);
+  const artwork = await ArtworkService.getArtworkBySlug(slug);
 
   if (!artwork) {
     notFound();
   }
 
-  const artist = ArtworkService.getArtistById(artwork.artistId) || null;
-  const related = ArtworkService.getRelatedArtworks(slug, 4);
+  const artist = artwork.artistId ? await ArtworkService.getArtistById(artwork.artistId) : null;
+  const related = await ArtworkService.getRelatedArtworks(slug, 4);
 
   return (
     <>

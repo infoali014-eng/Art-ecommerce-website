@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { SlidersHorizontal } from 'lucide-react';
 
@@ -20,6 +20,8 @@ import { filterArtworks } from '@/utils/filterArtworks';
 import { paginateArtworks } from '@/utils/paginateArtworks';
 import { searchArtworks } from '@/utils/searchArtworks';
 import { sortArtworks, SortOption } from '@/utils/sortArtworks';
+
+import { Artwork } from '@/types';
 
 interface GalleryContentProps {
   categorySlug?: string;
@@ -55,8 +57,24 @@ export const GalleryContent: React.FC<GalleryContentProps> = ({
   const { limit, loadMore, resetPagination } = usePagination(12, 6);
   const { selectedArtwork, openQuickView, closeQuickView, isOpen: quickViewOpen } = useQuickView();
 
-  // Load static data via service
-  const rawArtworks = ArtworkService.getAllArtworks();
+  // Load data asynchronously via service
+  const [rawArtworks, setRawArtworks] = useState<Artwork[]>([]);
+  const [isDataLoading, setIsDataLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        setIsDataLoading(true);
+        const data = await ArtworkService.getAllArtworks();
+        setRawArtworks(data);
+      } catch (e) {
+        console.error('[GalleryContent] Error fetching artworks:', e);
+      } finally {
+        setIsDataLoading(false);
+      }
+    };
+    fetchArtworks();
+  }, []);
 
   // Pipeline execution
   const searched = searchArtworks(rawArtworks, searchQuery);
@@ -163,7 +181,7 @@ export const GalleryContent: React.FC<GalleryContentProps> = ({
             </div>
 
             {/* Catalog Grid / Loading State / Empty State */}
-            {isLoading ? (
+            {isLoading || isDataLoading ? (
               // Loading Skeleton State
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Array.from({ length: 6 }).map((_, i) => (

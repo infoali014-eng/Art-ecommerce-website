@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,7 +27,23 @@ export default function WishlistPage() {
   const { addItem, setIsCartOpen } = useCart();
   const { addToast } = useToast();
 
-  const allArtworks = ArtworkService.getAllArtworks();
+  const [allArtworks, setAllArtworks] = useState<Artwork[]>([]);
+  const [isDataLoading, setIsDataLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        setIsDataLoading(true);
+        const data = await ArtworkService.getAllArtworks();
+        setAllArtworks(data);
+      } catch (e) {
+        console.error('[WishlistPage] Error loading artworks:', e);
+      } finally {
+        setIsDataLoading(false);
+      }
+    };
+    fetchArtworks();
+  }, []);
 
   // Map lightweight storage items back to full artwork models
   const wishlistArtworks = wishlist
@@ -86,7 +102,17 @@ export default function WishlistPage() {
               <div className="w-12 h-[1px] bg-accent mt-4" />
             </div>
 
-            {wishlistArtworks.length === 0 ? (
+            {isDataLoading ? (
+              /* Loading Pulse Skeletons */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-[400px] animate-pulse bg-primary/5 border border-primary/5"
+                  />
+                ))}
+              </div>
+            ) : wishlistArtworks.length === 0 ? (
               /* Empty Wishlist View */
               <div className="border border-primary/5 bg-white py-24 px-6 text-center max-w-2xl mx-auto flex flex-col items-center">
                 <div className="w-16 h-16 rounded-full border border-primary/5 bg-background flex items-center justify-center text-secondary/40 mb-6">

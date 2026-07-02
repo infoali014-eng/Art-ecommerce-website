@@ -2,6 +2,8 @@ import { cookies } from 'next/headers';
 
 import { createServerClient } from '@supabase/ssr';
 
+import { Database } from '@/types/database';
+
 export const createClient = async () => {
   const cookieStore = await cookies();
   let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -14,7 +16,7 @@ export const createClient = async () => {
     supabaseAnonKey = 'placeholder-anon-key';
   }
 
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();

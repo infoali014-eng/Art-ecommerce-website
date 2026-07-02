@@ -1,53 +1,52 @@
-import artistsData from '@/data/artists.json';
-import artworksData from '@/data/artworks.json';
-import categoriesData from '@/data/categories.json';
-import collectionsData from '@/data/collections.json';
+import { ArtistRepository } from '@/repositories/artist.repository';
+import { ArtworkRepository } from '@/repositories/artwork.repository';
+import { CategoryRepository } from '@/repositories/category.repository';
+import { CollectionRepository } from '@/repositories/collection.repository';
 
 import { Artist, Artwork, Category, Collection } from '@/types';
 
-const artworks = artworksData as Artwork[];
-const artists = artistsData as Artist[];
-const categories = categoriesData as Category[];
-const collections = collectionsData as Collection[];
-
 export const ArtworkService = {
-  getAllArtworks(): Artwork[] {
-    return artworks;
+  async getAllArtworks(): Promise<Artwork[]> {
+    const { data } = await ArtworkRepository.getArtworks({ limit: 100 });
+    return data;
   },
 
-  getArtworkBySlug(slug: string): Artwork | undefined {
-    return artworks.find((art) => art.slug === slug);
+  async getArtworks(filters: {
+    page?: number;
+    limit?: number;
+    category?: string;
+    search?: string;
+  }): Promise<{ data: Artwork[]; count: number }> {
+    return await ArtworkRepository.getArtworks(filters);
   },
 
-  getFeaturedArtworks(): Artwork[] {
-    return artworks.filter((art) => art.featured);
+  async getArtworkBySlug(slug: string): Promise<Artwork | null> {
+    return await ArtworkRepository.getArtworkBySlug(slug);
   },
 
-  getRelatedArtworks(slug: string, limit: number = 4): Artwork[] {
-    const artwork = this.getArtworkBySlug(slug);
-    if (!artwork) return [];
-    return artworks
-      .filter(
-        (art) =>
-          art.id !== artwork.id &&
-          (art.category === artwork.category || art.collection === artwork.collection)
-      )
-      .slice(0, limit);
+  async getFeaturedArtworks(): Promise<Artwork[]> {
+    return await ArtworkRepository.getFeaturedArtworks();
   },
 
-  getArtists(): Artist[] {
-    return artists;
+  async getRelatedArtworks(slug: string, limit = 4): Promise<Artwork[]> {
+    return await ArtworkRepository.getRelatedArtworks(slug, limit);
   },
 
-  getArtistById(id: string): Artist | undefined {
-    return artists.find((artist) => artist.id === id);
+  // Legacy compatibility wrappers for artists, categories, and collections
+  async getArtists(): Promise<Artist[]> {
+    return await ArtistRepository.getArtists();
   },
 
-  getCategories(): Category[] {
-    return categories;
+  async getArtistById(id: string): Promise<Artist | null> {
+    return await ArtistRepository.getArtistById(id);
   },
 
-  getCollections(): Collection[] {
-    return collections;
+  async getCategories(): Promise<Category[]> {
+    return await CategoryRepository.getCategories();
+  },
+
+  async getCollections(): Promise<Collection[]> {
+    return await CollectionRepository.getCollections();
   },
 };
+export default ArtworkService;

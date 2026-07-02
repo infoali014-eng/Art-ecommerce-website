@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
 import { motion } from 'framer-motion';
 import { Eye, Heart } from 'lucide-react';
 
+import { ArtworkSkeleton } from '@/components/skeleton/ArtworkSkeleton';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useToast } from '@/hooks/useToast';
 import { ArtworkService } from '@/services/artwork.service';
@@ -26,7 +27,23 @@ export const FeaturedCollection: React.FC = () => {
   const { isFavorite, toggleFavorite } = useFavorites();
   const { addToast } = useToast();
 
-  const featuredArtworks = ArtworkService.getFeaturedArtworks();
+  const [featuredArtworks, setFeaturedArtworks] = useState<Artwork[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        setIsLoading(true);
+        const data = await ArtworkService.getFeaturedArtworks();
+        setFeaturedArtworks(data);
+      } catch (e) {
+        console.error('[FeaturedCollection] Error fetching featured items:', e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchFeatured();
+  }, []);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -60,87 +77,91 @@ export const FeaturedCollection: React.FC = () => {
 
         {/* Artworks Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredArtworks.map((artwork, index) => (
-            <motion.div
-              key={artwork.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <Card hoverable className="group h-full flex flex-col justify-between">
-                {/* Image Wrapper */}
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-background">
-                  <Image
-                    src={artwork.images[0]}
-                    alt={artwork.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                  {/* Overlay Actions */}
-                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-                    <button
-                      onClick={() => setSelectedArtwork(artwork)}
-                      className="bg-background text-primary p-2.5 rounded-full shadow-lg hover:text-accent transition-colors duration-200 cursor-pointer"
-                      aria-label="Quick View"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        const favorited = isFavorite(artwork.id);
-                        toggleFavorite(artwork.id);
-                        if (favorited) {
-                          addToast(`Removed "${artwork.title}" from your wishlist.`, 'info');
-                        } else {
-                          addToast(`Saved "${artwork.title}" to your wishlist.`, 'success');
-                        }
-                      }}
-                      className="bg-background text-primary p-2.5 rounded-full shadow-lg hover:text-accent transition-colors duration-200 cursor-pointer"
-                      aria-label="Add to Favorites"
-                    >
-                      <Heart
-                        className={`w-4 h-4 transition-colors ${
-                          isFavorite(artwork.id) ? 'fill-accent text-accent' : ''
-                        }`}
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, i) => <ArtworkSkeleton key={i} />)
+            : featuredArtworks.map((artwork, index) => (
+                <motion.div
+                  key={artwork.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <Card hoverable className="group h-full flex flex-col justify-between">
+                    {/* Image Wrapper */}
+                    <div className="relative aspect-[3/4] w-full overflow-hidden bg-background">
+                      <Image
+                        src={artwork.images[0]}
+                        alt={artwork.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
-                    </button>
-                  </div>
-                  {/* Category Badge */}
-                  <Badge variant="accent" className="absolute top-4 left-4">
-                    {artwork.category}
-                  </Badge>
-                </div>
-
-                {/* Content */}
-                <div className="p-5 flex flex-col justify-between flex-grow">
-                  <div className="mb-4">
-                    <h3 className="font-cormorant text-lg font-medium text-primary tracking-wide mb-1">
-                      {artwork.title}
-                    </h3>
-                    <p className="font-sans text-xs text-secondary mb-2 italic">{artwork.artist}</p>
-                    <div className="text-[10px] text-secondary font-sans uppercase tracking-wider flex items-center gap-2">
-                      <span>{artwork.medium}</span>
-                      <span className="w-1 h-1 rounded-full bg-primary/10" />
-                      <span>{artwork.dimensions}</span>
+                      {/* Overlay Actions */}
+                      <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                        <button
+                          onClick={() => setSelectedArtwork(artwork)}
+                          className="bg-background text-primary p-2.5 rounded-full shadow-lg hover:text-accent transition-colors duration-200 cursor-pointer"
+                          aria-label="Quick View"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            const favorited = isFavorite(artwork.id);
+                            toggleFavorite(artwork.id);
+                            if (favorited) {
+                              addToast(`Removed "${artwork.title}" from your wishlist.`, 'info');
+                            } else {
+                              addToast(`Saved "${artwork.title}" to your wishlist.`, 'success');
+                            }
+                          }}
+                          className="bg-background text-primary p-2.5 rounded-full shadow-lg hover:text-accent transition-colors duration-200 cursor-pointer"
+                          aria-label="Add to Favorites"
+                        >
+                          <Heart
+                            className={`w-4 h-4 transition-colors ${
+                              isFavorite(artwork.id) ? 'fill-accent text-accent' : ''
+                            }`}
+                          />
+                        </button>
+                      </div>
+                      {/* Category Badge */}
+                      <Badge variant="accent" className="absolute top-4 left-4">
+                        {artwork.category}
+                      </Badge>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-primary/5 pt-4">
-                    <span className="font-sans text-sm font-semibold text-primary">
-                      {formatPrice(artwork.price)}
-                    </span>
-                    <button
-                      onClick={() => setSelectedArtwork(artwork)}
-                      className="font-sans text-[10px] uppercase tracking-wider text-accent border-b border-accent/20 pb-0.5 hover:text-primary hover:border-primary transition-colors duration-250 cursor-pointer"
-                    >
-                      Acquire &rarr;
-                    </button>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
+
+                    {/* Content */}
+                    <div className="p-5 flex flex-col justify-between flex-grow">
+                      <div className="mb-4">
+                        <h3 className="font-cormorant text-lg font-medium text-primary tracking-wide mb-1">
+                          {artwork.title}
+                        </h3>
+                        <p className="font-sans text-xs text-secondary mb-2 italic">
+                          {artwork.artist}
+                        </p>
+                        <div className="text-[10px] text-secondary font-sans uppercase tracking-wider flex items-center gap-2">
+                          <span>{artwork.medium}</span>
+                          <span className="w-1 h-1 rounded-full bg-primary/10" />
+                          <span>{artwork.dimensions}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between border-t border-primary/5 pt-4">
+                        <span className="font-sans text-sm font-semibold text-primary">
+                          {formatPrice(artwork.price)}
+                        </span>
+                        <button
+                          onClick={() => setSelectedArtwork(artwork)}
+                          className="font-sans text-[10px] uppercase tracking-wider text-accent border-b border-accent/20 pb-0.5 hover:text-primary hover:border-primary transition-colors duration-250 cursor-pointer"
+                        >
+                          Acquire &rarr;
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
         </div>
       </Container>
 
