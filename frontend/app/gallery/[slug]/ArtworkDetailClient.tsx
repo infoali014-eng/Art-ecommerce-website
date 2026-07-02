@@ -12,7 +12,10 @@ import { Section } from '@/components/layout/Section';
 import { ArtworkCard } from '@/components/ui/ArtworkCard';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { useCart } from '@/hooks/useCart';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useToast } from '@/hooks/useToast';
+import { FRAME_PRICES } from '@/utils/calculateSubtotal';
 
 import { Artist, Artwork } from '@/types';
 
@@ -30,18 +33,30 @@ export const ArtworkDetailClient: React.FC<ArtworkDetailClientProps> = ({
   const [activeImage, setActiveImage] = useState(artwork.images[0]);
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
   const [showZoom, setShowZoom] = useState(false);
-  const [frameOption, setFrameOption] = useState(false);
+  const [frameOption, setFrameOption] = useState('none');
   const [inquireSuccess, setInquireSuccess] = useState(false);
 
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { addItem, setIsCartOpen } = useCart();
+  const { addToast } = useToast();
   const favorited = isFavorite(artwork.id);
 
+  const handleToggleFavorite = () => {
+    toggleFavorite(artwork.id);
+    if (favorited) {
+      addToast(`Removed "${artwork.title}" from your wishlist.`, 'info');
+    } else {
+      addToast(`Saved "${artwork.title}" to your wishlist.`, 'success');
+    }
+  };
+
   const formatPrice = (price: number) => {
+    const frameCost = FRAME_PRICES[frameOption] ?? 0;
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0,
-    }).format(price + (frameOption ? 250 : 0));
+    }).format(price + frameCost);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -52,11 +67,9 @@ export const ArtworkDetailClient: React.FC<ArtworkDetailClientProps> = ({
   };
 
   const handleAddToCart = () => {
-    alert(
-      `"${artwork.title}" ${
-        frameOption ? '(with Premium Frame)' : ''
-      } has been added to your shopping bag (Mock Cart Session).`
-    );
+    addItem(artwork, frameOption, 1);
+    addToast(`Added "${artwork.title}" to your shopping bag.`, 'success');
+    setIsCartOpen(true);
   };
 
   const handleInquirySubmit = (e: React.FormEvent) => {
@@ -159,7 +172,7 @@ export const ArtworkDetailClient: React.FC<ArtworkDetailClientProps> = ({
                 {formatPrice(artwork.price)}
               </span>
               <button
-                onClick={() => toggleFavorite(artwork.id)}
+                onClick={handleToggleFavorite}
                 className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-secondary hover:text-accent transition-colors duration-250 cursor-pointer"
               >
                 <Heart className={`w-4 h-4 ${favorited ? 'fill-accent text-accent' : ''}`} />
@@ -167,26 +180,29 @@ export const ArtworkDetailClient: React.FC<ArtworkDetailClientProps> = ({
               </button>
             </div>
 
-            {/* framing optional toggles */}
+            {/* framing optional selectors */}
             {artwork.framingAvailable && (
               <div className="p-4 border border-primary/5 bg-white space-y-3">
-                <label className="flex items-start text-xs cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={frameOption}
-                    onChange={(e) => setFrameOption(e.target.checked)}
-                    className="mr-3 mt-0.5 accent-accent w-4 h-4 cursor-pointer"
-                  />
-                  <div>
-                    <span className="font-semibold text-primary block mb-0.5">
-                      Add Premium Framing (+ $250)
-                    </span>
-                    <span className="text-secondary font-light">
-                      Custom handcrafted oak float frame designed to coordinate with museum
-                      standards. Adds 3 days to delivery.
-                    </span>
-                  </div>
-                </label>
+                <div className="text-xs">
+                  <label className="font-semibold text-primary block mb-2">
+                    Select Premium Frame Style
+                  </label>
+                  <select
+                    value={frameOption}
+                    onChange={(e) => setFrameOption(e.target.value)}
+                    className="w-full bg-background border border-primary/10 px-3 py-2.5 text-xs focus:outline-none focus:border-accent cursor-pointer"
+                  >
+                    <option value="none">No Frame (Raw Canvas)</option>
+                    <option value="black">Premium Black Oak Float Frame (+$250)</option>
+                    <option value="walnut">Natural Walnut Float Frame (+$250)</option>
+                    <option value="gold">Museum Gold Leaf Frame (+$350)</option>
+                    <option value="white">Minimal Matte White Frame (+$250)</option>
+                  </select>
+                </div>
+                <p className="text-[10px] text-secondary font-light leading-relaxed">
+                  Custom handcrafted frame matching museum-quality preservation standards. Adds 3
+                  days to shipping delivery.
+                </p>
               </div>
             )}
 

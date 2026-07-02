@@ -5,17 +5,25 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { ChevronDown, Menu, Search, ShoppingBag, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronDown, Heart, Menu, Search, ShoppingBag, X } from 'lucide-react';
 
 import { navigation } from '@/config/navigation';
+import { useCart } from '@/hooks/useCart';
+import { useWishlist } from '@/hooks/useWishlist';
 
 import { Container } from '../layout/Container';
+
+import { CartDrawer } from './CartDrawer';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const pathname = usePathname();
+  const { itemCount, isCartOpen, setIsCartOpen } = useCart();
+  const { wishlist } = useWishlist();
+  const wishlistCount = wishlist.length;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -130,15 +138,41 @@ export const Navbar: React.FC = () => {
               <Search className="w-4 h-4" />
             </button>
             <Link
-              href="/cart"
-              aria-label="Cart"
+              href="/wishlist"
+              aria-label="Wishlist"
               className="text-primary hover:text-accent transition-colors duration-300 relative"
             >
-              <ShoppingBag className="w-4 h-4" />
-              <span className="absolute -top-1.5 -right-1.5 bg-accent text-[9px] text-primary w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">
-                0
-              </span>
+              <Heart className="w-4 h-4" />
+              {wishlistCount > 0 && (
+                <motion.span
+                  key={`wish-${wishlistCount}`}
+                  initial={{ scale: 0.5, opacity: 0.5 }}
+                  animate={{ scale: [0.5, 1.2, 1], opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute -top-1.5 -right-1.5 bg-accent text-[9px] text-primary w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold"
+                >
+                  {wishlistCount}
+                </motion.span>
+              )}
             </Link>
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              aria-label="Cart"
+              className="text-primary hover:text-accent transition-colors duration-300 relative cursor-pointer bg-transparent border-0 p-0"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {itemCount > 0 && (
+                <motion.span
+                  key={`cart-${itemCount}`}
+                  initial={{ scale: 0.5, opacity: 0.5 }}
+                  animate={{ scale: [0.5, 1.2, 1], opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute -top-1.5 -right-1.5 bg-accent text-[9px] text-primary w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold"
+                >
+                  {itemCount}
+                </motion.span>
+              )}
+            </button>
           </div>
 
           {/* Mobile Buttons */}
@@ -150,15 +184,41 @@ export const Navbar: React.FC = () => {
               <Search className="w-4 h-4" />
             </button>
             <Link
-              href="/cart"
-              aria-label="Cart"
+              href="/wishlist"
+              aria-label="Wishlist"
               className="text-primary hover:text-accent transition-colors duration-300 relative"
             >
-              <ShoppingBag className="w-4 h-4" />
-              <span className="absolute -top-1.5 -right-1.5 bg-accent text-[9px] text-primary w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">
-                0
-              </span>
+              <Heart className="w-4 h-4" />
+              {wishlistCount > 0 && (
+                <motion.span
+                  key={`wish-mob-${wishlistCount}`}
+                  initial={{ scale: 0.5, opacity: 0.5 }}
+                  animate={{ scale: [0.5, 1.2, 1], opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute -top-1.5 -right-1.5 bg-accent text-[9px] text-primary w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold"
+                >
+                  {wishlistCount}
+                </motion.span>
+              )}
             </Link>
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              aria-label="Cart"
+              className="text-primary hover:text-accent transition-colors duration-300 relative cursor-pointer bg-transparent border-0 p-0"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {itemCount > 0 && (
+                <motion.span
+                  key={`cart-mob-${itemCount}`}
+                  initial={{ scale: 0.5, opacity: 0.5 }}
+                  animate={{ scale: [0.5, 1.2, 1], opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute -top-1.5 -right-1.5 bg-accent text-[9px] text-primary w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold"
+                >
+                  {itemCount}
+                </motion.span>
+              )}
+            </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle Mobile Menu"
@@ -216,6 +276,7 @@ export const Navbar: React.FC = () => {
           ))}
         </div>
       </div>
+      <CartDrawer />
     </header>
   );
 };

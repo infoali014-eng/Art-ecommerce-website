@@ -61,10 +61,27 @@ export interface Testimonial {
   rating: number;
 }
 
-// Commerce engine cart item details (Phase 3 ready)
 export interface CartItem {
+  id: string; // Unique combination of artworkId + frameOption
   artworkId: string;
-  quantity: number;
-  frameOption: boolean;
+  title: string;
   price: number;
+  quantity: number;
+  image: string;
+  frameOption: string; // e.g. "none" | "black" | "walnut" | "gold" | "white"
+  notes?: string;
+  addedAt: string;
+}
+
+export interface WishlistItem {
+  id: string; // Matches artworkId
+  artworkId: string;
+  addedAt: string;
+}
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
 }

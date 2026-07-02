@@ -71,7 +71,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-import { WishlistProvider } from '@/context/WishlistContext';
+import ToastContainer from '@/components/ui/Toast';
+import AppProviders from '@/providers/AppProviders';
 
 export default function RootLayout({
   children,
@@ -85,7 +86,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-primary font-sans">
-        <WishlistProvider>{children}</WishlistProvider>
+        <AppProviders>
+          {children}
+          <ToastContainer />
+        </AppProviders>
       </body>
     </html>
   );

@@ -7,7 +7,9 @@ import Link from 'next/link';
 
 import { Eye, Heart, ShoppingBag } from 'lucide-react';
 
+import { useCart } from '@/hooks/useCart';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useToast } from '@/hooks/useToast';
 
 import { Badge } from './Badge';
 
@@ -30,10 +32,26 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({ artwork, onQuickView }
     }).format(price);
   };
 
+  const { addItem, setIsCartOpen } = useCart();
+  const { addToast } = useToast();
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    alert(`"${artwork.title}" has been added to your shopping bag (Mock Cart Session).`);
+    addItem(artwork, 'none', 1);
+    addToast(`Added "${artwork.title}" to your shopping bag.`, 'success');
+    setIsCartOpen(true);
+  };
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(artwork.id);
+    if (favorited) {
+      addToast(`Removed "${artwork.title}" from your wishlist.`, 'info');
+    } else {
+      addToast(`Saved "${artwork.title}" to your wishlist.`, 'success');
+    }
   };
 
   return (
@@ -66,10 +84,7 @@ export const ArtworkCard: React.FC<ArtworkCardProps> = ({ artwork, onQuickView }
             <ShoppingBag className="w-4 h-4" />
           </button>
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              toggleFavorite(artwork.id);
-            }}
+            onClick={handleToggleFavorite}
             className="bg-background text-primary p-2.5 rounded-full shadow-lg hover:text-accent transition-colors duration-200 cursor-pointer"
             aria-label="Add to Favorites"
           >

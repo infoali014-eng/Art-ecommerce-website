@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Eye, Heart } from 'lucide-react';
 
+import { useFavorites } from '@/hooks/useFavorites';
+import { useToast } from '@/hooks/useToast';
 import { ArtworkService } from '@/services/artwork.service';
 
 import { Container } from '../layout/Container';
@@ -21,6 +23,8 @@ import { Artwork } from '@/types';
 export const FeaturedCollection: React.FC = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [inquireSuccess, setInquireSuccess] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { addToast } = useToast();
 
   const featuredArtworks = ArtworkService.getFeaturedArtworks();
 
@@ -84,10 +88,23 @@ export const FeaturedCollection: React.FC = () => {
                       <Eye className="w-4 h-4" />
                     </button>
                     <button
+                      onClick={() => {
+                        const favorited = isFavorite(artwork.id);
+                        toggleFavorite(artwork.id);
+                        if (favorited) {
+                          addToast(`Removed "${artwork.title}" from your wishlist.`, 'info');
+                        } else {
+                          addToast(`Saved "${artwork.title}" to your wishlist.`, 'success');
+                        }
+                      }}
                       className="bg-background text-primary p-2.5 rounded-full shadow-lg hover:text-accent transition-colors duration-200 cursor-pointer"
                       aria-label="Add to Favorites"
                     >
-                      <Heart className="w-4 h-4" />
+                      <Heart
+                        className={`w-4 h-4 transition-colors ${
+                          isFavorite(artwork.id) ? 'fill-accent text-accent' : ''
+                        }`}
+                      />
                     </button>
                   </div>
                   {/* Category Badge */}
