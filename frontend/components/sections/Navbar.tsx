@@ -3,14 +3,17 @@
 import React, { useEffect, useState } from 'react';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 import { ChevronDown, Heart, Menu, Search, ShoppingBag, X } from 'lucide-react';
 
 import { navigation } from '@/config/navigation';
+import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/useToast';
 import { useWishlist } from '@/hooks/useWishlist';
+import { AuthService } from '@/services/auth.service';
 
 import { Container } from '../layout/Container';
 
@@ -20,10 +23,24 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { itemCount, isCartOpen, setIsCartOpen } = useCart();
   const { wishlist } = useWishlist();
   const wishlistCount = wishlist.length;
+  const { user, isAuthenticated } = useAuth();
+  const { addToast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await AuthService.logout();
+      addToast('Logged out successfully.', 'info');
+      router.push('/');
+    } catch {
+      addToast('Logout failed.', 'error');
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -173,6 +190,72 @@ export const Navbar: React.FC = () => {
                 </motion.span>
               )}
             </button>
+
+            {isAuthenticated ? (
+              <div className="relative">
+                <button
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  className="flex items-center gap-1.5 text-primary hover:text-accent transition-colors duration-300 relative cursor-pointer"
+                  aria-label="User profile menu"
+                >
+                  <div className="w-6 h-6 rounded-full bg-accent/10 border border-primary/5 flex items-center justify-center text-[10px] font-bold text-accent">
+                    {user?.user_metadata?.full_name
+                      ? user.user_metadata.full_name.substring(0, 1).toUpperCase()
+                      : 'C'}
+                  </div>
+                  <ChevronDown className="w-3 h-3 text-secondary" />
+                </button>
+
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 mt-2.5 w-48 bg-white border border-primary/5 shadow-xl py-2 z-50 text-xs font-sans">
+                    <div className="px-4 py-2 border-b border-primary/5 text-secondary font-light">
+                      Acquirer:{' '}
+                      <span className="font-semibold text-primary block truncate">
+                        {user?.user_metadata?.full_name || user?.email}
+                      </span>
+                    </div>
+                    <Link
+                      href="/profile"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="block px-4 py-2 text-primary hover:bg-accent/5 transition-colors"
+                    >
+                      Your Profile
+                    </Link>
+                    <Link
+                      href="/orders"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="block px-4 py-2 text-primary hover:bg-accent/5 transition-colors"
+                    >
+                      Acquisitions History
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full text-left block px-4 py-2 text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                    >
+                      Log Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  href="/login"
+                  className="text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors font-medium"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="text-xs uppercase tracking-widest bg-primary text-white hover:bg-accent hover:text-primary transition-colors px-3 py-1.5 font-medium"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Buttons */}
@@ -219,6 +302,26 @@ export const Navbar: React.FC = () => {
                 </motion.span>
               )}
             </button>
+
+            {isAuthenticated ? (
+              <Link
+                href="/profile"
+                className="w-6 h-6 rounded-full bg-accent/10 border border-primary/5 flex items-center justify-center text-[10px] font-bold text-accent shrink-0"
+                aria-label="Profile"
+              >
+                {user?.user_metadata?.full_name
+                  ? user.user_metadata.full_name.substring(0, 1).toUpperCase()
+                  : 'C'}
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="text-[10px] uppercase tracking-widest font-medium text-secondary hover:text-primary transition-colors shrink-0"
+              >
+                Login
+              </Link>
+            )}
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle Mobile Menu"
@@ -274,6 +377,54 @@ export const Navbar: React.FC = () => {
               )}
             </div>
           ))}
+
+          {/* Mobile Auth Links */}
+          <div className="border-t border-primary/5 pt-6 flex flex-col space-y-4">
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/profile"
+                  onClick={() => setIsOpen(false)}
+                  className="font-sans text-xs uppercase tracking-widest text-primary hover:text-accent transition-colors"
+                >
+                  Your Profile
+                </Link>
+                <Link
+                  href="/orders"
+                  onClick={() => setIsOpen(false)}
+                  className="font-sans text-xs uppercase tracking-widest text-primary hover:text-accent transition-colors"
+                >
+                  Acquisitions History
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleLogout();
+                  }}
+                  className="w-full text-left font-sans text-xs uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors cursor-pointer"
+                >
+                  Log Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="font-sans text-xs uppercase tracking-widest text-primary hover:text-accent transition-colors"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setIsOpen(false)}
+                  className="font-sans text-xs uppercase tracking-widest text-primary hover:text-accent transition-colors"
+                >
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
       <CartDrawer />

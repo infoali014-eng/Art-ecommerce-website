@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 
-export function middleware() {
-  // Reserved for future authentication and route protection.
-  // E.g., verifying Supabase JWT tokens, managing user sessions, etc.
-  return NextResponse.next();
+import { updateSession } from '@/lib/supabase/middleware';
+
+export async function middleware(request: NextRequest) {
+  return await updateSession(request);
 }
 
 // Config to specify matching routes for the middleware.

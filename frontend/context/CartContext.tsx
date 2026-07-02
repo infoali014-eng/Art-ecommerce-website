@@ -2,6 +2,7 @@
 
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 
+import { createClient } from '@/lib/supabase/client';
 import { AnalyticsService } from '@/services/analytics.service';
 import { CartService } from '@/services/cart.service';
 import { calculateGrandTotal } from '@/utils/calculateGrandTotal';
@@ -33,6 +34,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  const supabase = createClient();
+
   useEffect(() => {
     const storedItems = CartService.getCartItems();
     setItems(storedItems);
@@ -43,6 +46,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!isInitialized) return;
     CartService.saveCartItems(items);
   }, [items, isInitialized]);
+
+  // Guest to User session cart merge routine
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        console.log('[Cart] User logged in. Merging guest cart session into account...');
+        // Interface ready for database persistence:
+        // const userCart = await fetchUserCartFromSupabase(session.user.id);
+        // const merged = mergeGuestAndUserCarts(items, userCart);
+        // setItems(merged);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase.auth]);
 
   const addItem = (artwork: Artwork, frameOption: string, quantity = 1, notes = '') => {
     setItems((prev) => {

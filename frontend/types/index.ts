@@ -85,3 +85,12 @@ export interface Coupon {
   discountType: 'percentage' | 'fixed';
   discountValue: number;
 }
+
+export interface UserProfile {
+  id: string;
+  fullName: string;
+  avatarUrl?: string;
+  phone?: string;
+  createdAt: string;
+  updatedAt: string;
+}
