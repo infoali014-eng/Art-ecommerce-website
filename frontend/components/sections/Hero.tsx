@@ -1,12 +1,16 @@
 'use client';
 
 import React from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { motion } from 'framer-motion';
+
+import heroBg from '@/assets/hero/background.png';
+
 import { Container } from '../layout/Container';
 import { Button } from '../ui/Button';
-import heroBg from '@/assets/hero/background.png';
 
 export const Hero: React.FC = () => {
   return (
@@ -50,7 +54,8 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="font-sans text-sm md:text-base text-background/85 font-light max-w-xl mb-12 tracking-wide leading-relaxed"
           >
-            Experience a curated selection of fine oil paintings, delicate calligraphy, and structural sketches designed for modern luxury spaces.
+            Experience a curated selection of fine oil paintings, delicate calligraphy, and
+            structural sketches designed for modern luxury spaces.
           </motion.p>
 
           <motion.div
@@ -65,7 +70,11 @@ export const Hero: React.FC = () => {
               </Button>
             </Link>
             <Link href="/custom-order" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-primary">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-primary"
+              >
                 Order Custom Artwork
               </Button>
             </Link>

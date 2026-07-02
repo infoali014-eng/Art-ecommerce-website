@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import Navbar from '@/components/sections/Navbar';
-import Footer from '@/components/sections/Footer';
+
+import { Container } from '@/components/layout/Container';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Section } from '@/components/layout/Section';
-import { Container } from '@/components/layout/Container';
-import { Input } from '@/components/ui/Input';
-import { Dropdown } from '@/components/ui/Dropdown';
+import Footer from '@/components/sections/Footer';
+import Navbar from '@/components/sections/Navbar';
 import { Button } from '@/components/ui/Button';
+import { Dropdown } from '@/components/ui/Dropdown';
+import { Input } from '@/components/ui/Input';
 
 export default function CustomOrderPage() {
   const [medium, setMedium] = useState('');
@@ -61,37 +62,55 @@ export default function CustomOrderPage() {
                     The Commission Process
                   </h3>
                   <p className="font-sans text-sm text-secondary font-light leading-relaxed tracking-wide mb-6">
-                    Commissioning a custom artwork is an intimate process between collector, artist, and curator. Whether you require a specific dimension for an architectural niche or a bespoke calligraphy inscription, our team ensures the result is a museum-quality asset.
+                    Commissioning a custom artwork is an intimate process between collector, artist,
+                    and curator. Whether you require a specific dimension for an architectural niche
+                    or a bespoke calligraphy inscription, our team ensures the result is a
+                    museum-quality asset.
                   </p>
                 </div>
 
                 <div className="space-y-6">
                   <div className="flex gap-4">
-                    <div className="font-cormorant text-2xl text-accent font-light italic w-8 shrink-0">01</div>
+                    <div className="font-cormorant text-2xl text-accent font-light italic w-8 shrink-0">
+                      01
+                    </div>
                     <div>
-                      <h4 className="font-sans text-xs uppercase tracking-wider font-semibold text-primary mb-1">Consultation</h4>
+                      <h4 className="font-sans text-xs uppercase tracking-wider font-semibold text-primary mb-1">
+                        Consultation
+                      </h4>
                       <p className="font-sans text-xs text-secondary font-light leading-relaxed">
-                        Detail your medium, space requirements, and style preference. We align your vision with our master artists.
+                        Detail your medium, space requirements, and style preference. We align your
+                        vision with our master artists.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="font-cormorant text-2xl text-accent font-light italic w-8 shrink-0">02</div>
+                    <div className="font-cormorant text-2xl text-accent font-light italic w-8 shrink-0">
+                      02
+                    </div>
                     <div>
-                      <h4 className="font-sans text-xs uppercase tracking-wider font-semibold text-primary mb-1">Sketch Proposal</h4>
+                      <h4 className="font-sans text-xs uppercase tracking-wider font-semibold text-primary mb-1">
+                        Sketch Proposal
+                      </h4>
                       <p className="font-sans text-xs text-secondary font-light leading-relaxed">
-                        You receive structural sketches and color swatches for spatial review and confirmation.
+                        You receive structural sketches and color swatches for spatial review and
+                        confirmation.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="font-cormorant text-2xl text-accent font-light italic w-8 shrink-0">03</div>
+                    <div className="font-cormorant text-2xl text-accent font-light italic w-8 shrink-0">
+                      03
+                    </div>
                     <div>
-                      <h4 className="font-sans text-xs uppercase tracking-wider font-semibold text-primary mb-1">Creation & Delivery</h4>
+                      <h4 className="font-sans text-xs uppercase tracking-wider font-semibold text-primary mb-1">
+                        Creation & Delivery
+                      </h4>
                       <p className="font-sans text-xs text-secondary font-light leading-relaxed">
-                        The piece is hand-crafted, professionally framed, and delivered in custom wooden crates with a Certificate of Authenticity.
+                        The piece is hand-crafted, professionally framed, and delivered in custom
+                        wooden crates with a Certificate of Authenticity.
                       </p>
                     </div>
                   </div>
@@ -103,7 +122,10 @@ export default function CustomOrderPage() {
                 {success ? (
                   <div className="bg-emerald-50/50 text-emerald-800 p-8 border border-emerald-100 text-xs font-sans text-center uppercase tracking-wider h-full flex flex-col items-center justify-center space-y-4">
                     <span className="font-semibold text-sm text-emerald-900">Request Logged</span>
-                    <span>Our curation board will review your requirements and submit a quote within 48 hours.</span>
+                    <span>
+                      Our curation board will review your requirements and submit a quote within 48
+                      hours.
+                    </span>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -113,7 +135,12 @@ export default function CustomOrderPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <Input label="Full Name" placeholder="Arthur Pendragon" required />
-                      <Input label="Email Address" type="email" placeholder="arthur@camelot.com" required />
+                      <Input
+                        label="Email Address"
+                        type="email"
+                        placeholder="arthur@camelot.com"
+                        required
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "cat-paintings",
+    "slug": "paintings",
+    "name": "Paintings",
+    "description": "Bespoke original oil and acrylic paintings capturing timeless narratives.",
+    "image": "/assets/gallery/paintings_category.png"
+  },
+  {
+    "id": "cat-calligraphy",
+    "slug": "calligraphy",
+    "name": "Calligraphy",
+    "description": "Exquisite handwritten scripts combining historical elegance with contemporary vision.",
+    "image": "/assets/gallery/calligraphy_category.png"
+  },
+  {
+    "id": "cat-sketches",
+    "slug": "sketches",
+    "name": "Sketches",
+    "description": "Fine graphite and charcoal sketches portraying deep structural forms and light.",
+    "image": "/assets/gallery/sketches_category.png"
+  }
+]

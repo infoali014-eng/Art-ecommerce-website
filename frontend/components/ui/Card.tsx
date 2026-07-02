@@ -6,11 +6,7 @@ interface CardProps {
   hoverable?: boolean;
 }
 
-export const Card: React.FC<CardProps> = ({
-  children,
-  className = '',
-  hoverable = false,
-}) => {
+export const Card: React.FC<CardProps> = ({ children, className = '', hoverable = false }) => {
   return (
     <div
       className={`bg-white border border-primary/5 transition-all duration-500 overflow-hidden ${

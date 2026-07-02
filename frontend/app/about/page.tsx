@@ -1,9 +1,10 @@
 import React from 'react';
-import Navbar from '@/components/sections/Navbar';
-import Footer from '@/components/sections/Footer';
+
+import { Container } from '@/components/layout/Container';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Section } from '@/components/layout/Section';
-import { Container } from '@/components/layout/Container';
+import Footer from '@/components/sections/Footer';
+import Navbar from '@/components/sections/Navbar';
 
 export default function AboutPage() {
   return (
@@ -22,16 +23,25 @@ export default function AboutPage() {
 
             <div className="space-y-8 font-sans text-sm text-secondary font-light leading-relaxed tracking-wide">
               <p>
-                Founded in 2026, AURA is an editorial art gallery designed for collectors, designers, and interior architects who seek fine, minimalist aesthetics. We bridge the gap between traditional fine craftsmanship and contemporary living spaces.
+                Founded in 2026, AURA is an editorial art gallery designed for collectors,
+                designers, and interior architects who seek fine, minimalist aesthetics. We bridge
+                the gap between traditional fine craftsmanship and contemporary living spaces.
               </p>
               <p>
-                Every piece in our gallery is curated under strict museum-grade guidelines. From bespoke original oil paintings and acrylic experiments to historic brush ink calligraphy and architectural sketches, AURA stands as a testament to quiet luxury and architectural harmony.
+                Every piece in our gallery is curated under strict museum-grade guidelines. From
+                bespoke original oil paintings and acrylic experiments to historic brush ink
+                calligraphy and architectural sketches, AURA stands as a testament to quiet luxury
+                and architectural harmony.
               </p>
               <p className="italic text-primary font-medium font-cormorant text-lg text-center my-12">
-                "Art should not demand attention; it should command space through its silent presence."
+                &ldquo;Art should not demand attention; it should command space through its silent
+                presence.&rdquo;
               </p>
               <p>
-                We believe that modern spaces deserve art that reflects intentional living. By working directly with select local and international masters, we offer both a readymade collection of original works and a highly customized commission pipeline for private acquisitions.
+                We believe that modern spaces deserve art that reflects intentional living. By
+                working directly with select local and international masters, we offer both a
+                readymade collection of original works and a highly customized commission pipeline
+                for private acquisitions.
               </p>
             </div>
           </Container>

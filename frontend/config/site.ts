@@ -1,6 +1,7 @@
 export const siteConfig = {
   name: 'AURA | Premium Art Gallery & Custom Artwork',
-  description: 'An elegant, museum-inspired online gallery offering original paintings, calligraphy, sketches, and custom artwork commissions.',
+  description:
+    'An elegant, museum-inspired online gallery offering original paintings, calligraphy, sketches, and custom artwork commissions.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   ogImage: '/assets/placeholders/og-image.jpg',
   links: {

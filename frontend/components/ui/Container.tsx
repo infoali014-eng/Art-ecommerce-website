@@ -1,1 +1,1 @@
-export { Container } from '../layout/Container';
+export { Container } from '@/components/layout/Container';

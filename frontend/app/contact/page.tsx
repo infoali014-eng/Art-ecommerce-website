@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import Navbar from '@/components/sections/Navbar';
-import Footer from '@/components/sections/Footer';
+
+import { Container } from '@/components/layout/Container';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Section } from '@/components/layout/Section';
-import { Container } from '@/components/layout/Container';
-import { Input } from '@/components/ui/Input';
+import Footer from '@/components/sections/Footer';
+import Navbar from '@/components/sections/Navbar';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { siteConfig } from '@/config/site';
 
 export default function ContactPage() {
@@ -41,7 +42,9 @@ export default function ContactPage() {
                     The Gallery
                   </h3>
                   <p className="font-sans text-sm text-secondary font-light leading-relaxed tracking-wide">
-                    Located in the heart of the arts district, AURA Gallery provides a peaceful sanctuary to view masterworks in person. Private tours can be scheduled through our curator office.
+                    Located in the heart of the arts district, AURA Gallery provides a peaceful
+                    sanctuary to view masterworks in person. Private tours can be scheduled through
+                    our curator office.
                   </p>
                 </div>
 
@@ -52,7 +55,10 @@ export default function ContactPage() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[10px] text-accent mb-1">Email</span>
-                    <a href={`mailto:${siteConfig.contact.email}`} className="text-primary hover:text-accent font-normal transition-colors cursor-pointer">
+                    <a
+                      href={`mailto:${siteConfig.contact.email}`}
+                      className="text-primary hover:text-accent font-normal transition-colors cursor-pointer"
+                    >
                       {siteConfig.contact.email}
                     </a>
                   </div>
@@ -82,7 +88,12 @@ export default function ContactPage() {
                       <Input label="First Name" placeholder="Jane" required />
                       <Input label="Last Name" placeholder="Doe" required />
                     </div>
-                    <Input label="Email Address" type="email" placeholder="jane@example.com" required />
+                    <Input
+                      label="Email Address"
+                      type="email"
+                      placeholder="jane@example.com"
+                      required
+                    />
                     <div>
                       <label className="block text-[10px] uppercase tracking-wider text-secondary mb-1.5 font-medium font-sans">
                         Message

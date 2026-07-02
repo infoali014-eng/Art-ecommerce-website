@@ -1,0 +1,38 @@
+[
+  {
+    "id": "artist-marcus-vance",
+    "slug": "marcus-vance",
+    "name": "Marcus Vance",
+    "bio": "Marcus Vance is an award-winning painter whose abstract landscapes have been shown globally. Influenced by raw textures, atmospheric light, and mineral pigments, Marcus crafts oil canvases that convey a sense of calm and expansive space.",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
+    "mediums": ["Oil", "Gold Leaf", "Linen"],
+    "statement": "Art should not demand attention; it should command space through its silent presence."
+  },
+  {
+    "id": "artist-elena-rostova",
+    "slug": "elena-rostova",
+    "name": "Elena Rostova",
+    "bio": "Elena Rostova blends acrylic paints with organic plaster compounds to construct relief sculptures on canvas. Her monochromatic experiments examine how shadows cast by micro-reliefs transition over the course of a day.",
+    "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150",
+    "mediums": ["Acrylic", "Mixed Media", "Plaster"],
+    "statement": "Texture is the tactile memory of a canvas, recording the physical energy of its creation."
+  },
+  {
+    "id": "artist-kaito-hayashi",
+    "slug": "kaito-hayashi",
+    "name": "Kaito Hayashi",
+    "bio": "Kaito Hayashi is a master calligrapher based in Kyoto. Trained under classical Japanese masters, Kaito explores the boundary where ancient brush script forms dissolve into modern abstract expressions of wind, momentum, and stillness.",
+    "avatar": "https://images.unsplash.com/photo-1628157582853-a796fa650a6a?auto=format&fit=crop&q=80&w=150",
+    "mediums": ["Sumi Ink", "Charcoal Ink", "Washi Paper"],
+    "statement": "A single stroke contains a lifetime of breath, intention, and release."
+  },
+  {
+    "id": "artist-diana-prince",
+    "slug": "diana-prince",
+    "name": "Diana Prince",
+    "bio": "Diana Prince is a draftswoman focusing on architectural structures and classical light dynamics. Using fine graphite and silverpoint on acid-free boards, Diana studies structural geometry, shadows, and the quiet spaces in between.",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150",
+    "mediums": ["Graphite", "Charcoal", "Silverpoint"],
+    "statement": "Drawing is the pure anatomy of light, revealing the hidden structures of our world."
+  }
+]

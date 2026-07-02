@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, ShoppingBag, Menu, X, ChevronDown } from 'lucide-react';
+
+import { ChevronDown, Menu, Search, ShoppingBag, X } from 'lucide-react';
+
 import { navigation } from '@/config/navigation';
+
 import { Container } from '../layout/Container';
 
 export const Navbar: React.FC = () => {
@@ -68,7 +72,9 @@ export const Navbar: React.FC = () => {
                       }`}
                     >
                       {item.label}
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
+                      />
                     </button>
 
                     {/* Dropdown Items */}

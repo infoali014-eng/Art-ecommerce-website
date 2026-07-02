@@ -1,19 +1,22 @@
-import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
-import { siteConfig } from "@/config/site";
-import "./globals.css";
+import { Cormorant_Garamond, Inter } from 'next/font/google';
+
+import { siteConfig } from '@/config/site';
+
+import type { Metadata, Viewport } from 'next';
+
+import './globals.css';
 
 const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  variable: '--font-cormorant',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
 });
 
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  variable: '--font-inter',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -23,50 +26,52 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "art gallery",
-    "original paintings",
-    "calligraphy",
-    "pencil sketches",
-    "custom artwork",
-    "luxury art",
-    "museum quality",
-    "fine art",
+    'art gallery',
+    'original paintings',
+    'calligraphy',
+    'pencil sketches',
+    'custom artwork',
+    'luxury art',
+    'museum quality',
+    'fine art',
   ],
-  authors: [{ name: "AURA Gallery" }],
-  creator: "AURA Gallery",
+  authors: [{ name: 'AURA Gallery' }],
+  creator: 'AURA Gallery',
   metadataBase: new URL(siteConfig.url),
   openGraph: {
-    type: "website",
-    locale: "en_US",
+    type: 'website',
+    locale: 'en_US',
     url: siteConfig.url,
     title: siteConfig.name,
     description: siteConfig.description,
-    siteName: "AURA Gallery",
+    siteName: 'AURA Gallery',
     images: [
       {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: "AURA Premium Art Gallery",
+        alt: 'AURA Premium Art Gallery',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: 'summary_large_image',
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: '/favicon.ico',
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAF7F2",
-  width: "device-width",
+  themeColor: '#FAF7F2',
+  width: 'device-width',
   initialScale: 1,
 };
+
+import { WishlistProvider } from '@/context/WishlistContext';
 
 export default function RootLayout({
   children,
@@ -74,12 +79,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${cormorant.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${inter.variable} ${cormorant.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-primary font-sans">
-        {children}
+        <WishlistProvider>{children}</WishlistProvider>
       </body>
     </html>
   );

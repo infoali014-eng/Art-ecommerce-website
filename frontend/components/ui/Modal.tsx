@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect } from 'react';
+
+import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface ModalProps {
   isOpen: boolean;
@@ -12,13 +13,7 @@ interface ModalProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-  size = 'md',
-}) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 'md' }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -75,9 +70,7 @@ export const Modal: React.FC<ModalProps> = ({
             </div>
 
             {/* Body */}
-            <div className="max-h-[70vh] overflow-y-auto pr-2">
-              {children}
-            </div>
+            <div className="max-h-[70vh] overflow-y-auto pr-2">{children}</div>
           </motion.div>
         </div>
       )}

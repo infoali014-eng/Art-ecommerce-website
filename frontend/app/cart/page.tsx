@@ -1,10 +1,12 @@
 import React from 'react';
+
 import Link from 'next/link';
-import Navbar from '@/components/sections/Navbar';
-import Footer from '@/components/sections/Footer';
+
+import { Container } from '@/components/layout/Container';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Section } from '@/components/layout/Section';
-import { Container } from '@/components/layout/Container';
+import Footer from '@/components/sections/Footer';
+import Navbar from '@/components/sections/Navbar';
 import { Button } from '@/components/ui/Button';
 
 export default function CartPage() {
@@ -21,12 +23,11 @@ export default function CartPage() {
               Your Bag is Empty
             </h1>
             <p className="font-sans text-sm text-secondary font-light max-w-md mx-auto mb-10 leading-relaxed">
-              You have not added any masterworks to your bag yet. Browse our current catalog to discover fine paintings, calligraphy, and sketches.
+              You have not added any masterworks to your bag yet. Browse our current catalog to
+              discover fine paintings, calligraphy, and sketches.
             </p>
             <Link href="/gallery">
-              <Button variant="primary">
-                Browse Gallery
-              </Button>
+              <Button variant="primary">Browse Gallery</Button>
             </Link>
           </Container>
         </Section>

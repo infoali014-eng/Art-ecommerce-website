@@ -4,7 +4,7 @@ export const CATEGORY = {
   SKETCHES: 'Sketches',
 } as const;
 
-export type CategoryType = typeof CATEGORY[keyof typeof CATEGORY];
+export type CategoryType = (typeof CATEGORY)[keyof typeof CATEGORY];
 
 export const CATEGORY_DETAILS = {
   [CATEGORY.PAINTINGS]: {
@@ -16,7 +16,8 @@ export const CATEGORY_DETAILS = {
   [CATEGORY.CALLIGRAPHY]: {
     name: 'Calligraphy',
     slug: 'calligraphy',
-    description: 'Exquisite handwritten scripts combining historical elegance with contemporary vision.',
+    description:
+      'Exquisite handwritten scripts combining historical elegance with contemporary vision.',
     path: '/gallery/calligraphy',
   },
   [CATEGORY.SKETCHES]: {

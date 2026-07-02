@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
 import { ChevronDown } from 'lucide-react';
 
 interface DropdownOption {
@@ -55,7 +56,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
         <span className={selectedOption ? 'text-primary' : 'text-secondary'}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDown className={`w-4 h-4 text-secondary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 text-secondary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {isOpen && (
@@ -69,7 +72,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 setIsOpen(false);
               }}
               className={`w-full text-left px-4 py-2.5 text-sm hover:bg-background transition-colors duration-200 cursor-pointer ${
-                option.value === selectedValue ? 'bg-background text-accent font-medium' : 'text-primary'
+                option.value === selectedValue
+                  ? 'bg-background text-accent font-medium'
+                  : 'text-primary'
               }`}
             >
               {option.label}

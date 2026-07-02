@@ -1,10 +1,12 @@
 import React from 'react';
+
 import Link from 'next/link';
-import Navbar from '@/components/sections/Navbar';
-import Footer from '@/components/sections/Footer';
+
+import { Container } from '@/components/layout/Container';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Section } from '@/components/layout/Section';
-import { Container } from '@/components/layout/Container';
+import Footer from '@/components/sections/Footer';
+import Navbar from '@/components/sections/Navbar';
 import { Button } from '@/components/ui/Button';
 
 export default function NotFound() {
@@ -21,12 +23,11 @@ export default function NotFound() {
               Lost in Translation
             </h1>
             <p className="font-sans text-sm text-secondary font-light max-w-md mx-auto mb-10 leading-relaxed">
-              The page you are looking for does not exist in our curation. It may have been archived, renamed, or moved to a private collection.
+              The page you are looking for does not exist in our curation. It may have been
+              archived, renamed, or moved to a private collection.
             </p>
             <Link href="/">
-              <Button variant="outline">
-                Return to Gallery
-              </Button>
+              <Button variant="outline">Return to Gallery</Button>
             </Link>
           </Container>
         </Section>

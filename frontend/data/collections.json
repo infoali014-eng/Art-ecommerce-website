@@ -1,0 +1,18 @@
+[
+  {
+    "id": "col-winter-exhibition",
+    "slug": "winter-exhibition",
+    "name": "Winter Exhibition",
+    "description": "A collection representing cool color values, architectural stillness, and meditative moods.",
+    "image": "https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=800",
+    "curatorNote": "Curated to express winter solitude, this collection highlights graphite drawings and monochromatic oil studies."
+  },
+  {
+    "id": "col-golden-era",
+    "slug": "golden-era",
+    "name": "Golden Era Collection",
+    "description": "Curations integrating gold leaf overlays and warm metallic accents.",
+    "image": "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=800",
+    "curatorNote": "Warm gold leaf details explore transitions of light on the physical canvas throughout the day."
+  }
+]

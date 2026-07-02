@@ -1,23 +1,28 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import Image from 'next/image';
+
 import { motion } from 'framer-motion';
 import { Eye, Heart } from 'lucide-react';
-import { Section } from '../layout/Section';
+
+import { ArtworkService } from '@/services/artwork.service';
+
 import { Container } from '../layout/Container';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { Modal } from '../ui/Modal';
+import { Section } from '../layout/Section';
 import { Badge } from '../ui/Badge';
-import { ARTWORKS } from '@/constants/artworks';
+import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
+import { Modal } from '../ui/Modal';
+
 import { Artwork } from '@/types';
 
 export const FeaturedCollection: React.FC = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [inquireSuccess, setInquireSuccess] = useState(false);
 
-  const featuredArtworks = ARTWORKS.filter((art) => art.featured);
+  const featuredArtworks = ArtworkService.getFeaturedArtworks();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -63,7 +68,7 @@ export const FeaturedCollection: React.FC = () => {
                 {/* Image Wrapper */}
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-background">
                   <Image
-                    src={artwork.image}
+                    src={artwork.images[0]}
                     alt={artwork.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -97,9 +102,7 @@ export const FeaturedCollection: React.FC = () => {
                     <h3 className="font-cormorant text-lg font-medium text-primary tracking-wide mb-1">
                       {artwork.title}
                     </h3>
-                    <p className="font-sans text-xs text-secondary mb-2 italic">
-                      {artwork.artist}
-                    </p>
+                    <p className="font-sans text-xs text-secondary mb-2 italic">{artwork.artist}</p>
                     <div className="text-[10px] text-secondary font-sans uppercase tracking-wider flex items-center gap-2">
                       <span>{artwork.medium}</span>
                       <span className="w-1 h-1 rounded-full bg-primary/10" />
@@ -139,7 +142,7 @@ export const FeaturedCollection: React.FC = () => {
             {/* Artwork Image */}
             <div className="relative aspect-[3/4] w-full bg-background border border-primary/5">
               <Image
-                src={selectedArtwork.image}
+                src={selectedArtwork.images[0]}
                 alt={selectedArtwork.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -165,16 +168,24 @@ export const FeaturedCollection: React.FC = () => {
 
                 <div className="space-y-3 mb-6 pb-6 border-b border-primary/5">
                   <div className="flex justify-between text-xs">
-                    <span className="text-secondary font-sans uppercase tracking-wider">Medium</span>
+                    <span className="text-secondary font-sans uppercase tracking-wider">
+                      Medium
+                    </span>
                     <span className="text-primary font-medium">{selectedArtwork.medium}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-secondary font-sans uppercase tracking-wider">Dimensions</span>
+                    <span className="text-secondary font-sans uppercase tracking-wider">
+                      Dimensions
+                    </span>
                     <span className="text-primary font-medium">{selectedArtwork.dimensions}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-secondary font-sans uppercase tracking-wider">Status</span>
-                    <span className="text-primary font-medium text-emerald-600 font-semibold tracking-wide">Available</span>
+                    <span className="text-secondary font-sans uppercase tracking-wider">
+                      Status
+                    </span>
+                    <span className="text-primary font-medium text-emerald-600 font-semibold tracking-wide">
+                      Available
+                    </span>
                   </div>
                 </div>
 

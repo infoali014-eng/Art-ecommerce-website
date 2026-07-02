@@ -1,14 +1,18 @@
 'use client';
 
 import React from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { motion } from 'framer-motion';
-import { Section } from '../layout/Section';
-import { Container } from '../layout/Container';
-import paintingsImg from '@/assets/gallery/paintings_category.png';
+
 import calligraphyImg from '@/assets/gallery/calligraphy_category.png';
+import paintingsImg from '@/assets/gallery/paintings_category.png';
 import sketchesImg from '@/assets/gallery/sketches_category.png';
+
+import { Container } from '../layout/Container';
+import { Section } from '../layout/Section';
 
 const categories = [
   {

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { motion } from 'framer-motion';
 
 interface PageWrapperProps {
@@ -8,10 +9,7 @@ interface PageWrapperProps {
   className?: string;
 }
 
-export const PageWrapper: React.FC<PageWrapperProps> = ({
-  children,
-  className = '',
-}) => {
+export const PageWrapper: React.FC<PageWrapperProps> = ({ children, className = '' }) => {
   return (
     <motion.main
       initial={{ opacity: 0, y: 15 }}

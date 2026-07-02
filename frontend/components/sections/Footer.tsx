@@ -1,7 +1,11 @@
 import React from 'react';
+
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+
 import { siteConfig } from '@/config/site';
+
 import { Container } from '../layout/Container';
 
 export const Footer: React.FC = () => {
@@ -17,7 +21,8 @@ export const Footer: React.FC = () => {
               AURA
             </h3>
             <p className="font-sans text-xs text-background/60 leading-relaxed font-light">
-              An elegant space dedicated to showcasing fine original art, calligraphic scripts, and pencil studies. Designing luxury assets for timeless interiors.
+              An elegant space dedicated to showcasing fine original art, calligraphic scripts, and
+              pencil studies. Designing luxury assets for timeless interiors.
             </p>
           </div>
 
@@ -28,27 +33,42 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light">
+                <Link
+                  href="/"
+                  className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/gallery" className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light">
+                <Link
+                  href="/gallery"
+                  className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light"
+                >
                   Gallery Catalog
                 </Link>
               </li>
               <li>
-                <Link href="/collections" className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light">
+                <Link
+                  href="/collections"
+                  className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light"
+                >
                   Collections
                 </Link>
               </li>
               <li>
-                <Link href="/custom-order" className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light">
+                <Link
+                  href="/custom-order"
+                  className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light"
+                >
                   Custom Orders
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light">
+                <Link
+                  href="/about"
+                  className="font-sans text-xs text-background/70 hover:text-accent transition-colors duration-250 font-light"
+                >
                   About the Gallery
                 </Link>
               </li>
@@ -115,7 +135,7 @@ export const Footer: React.FC = () => {
             </div>
             <div className="pt-2">
               <h5 className="font-sans text-[10px] uppercase tracking-widest text-background/50 mb-3 font-medium">
-                Curator's Newsletter
+                Curator&apos;s Newsletter
               </h5>
               <div className="flex">
                 <input

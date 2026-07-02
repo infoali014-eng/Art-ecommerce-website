@@ -1,10 +1,11 @@
 import React from 'react';
-import Navbar from '@/components/sections/Navbar';
-import Footer from '@/components/sections/Footer';
+
+import { Container } from '@/components/layout/Container';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Section } from '@/components/layout/Section';
-import { Container } from '@/components/layout/Container';
 import FeaturedCollection from '@/components/sections/FeaturedCollection';
+import Footer from '@/components/sections/Footer';
+import Navbar from '@/components/sections/Navbar';
 
 export default function CollectionsPage() {
   return (
@@ -20,7 +21,9 @@ export default function CollectionsPage() {
               Our Curated Collections
             </h1>
             <p className="font-sans text-sm text-secondary font-light max-w-xl mx-auto leading-relaxed">
-              Explore our current seasonal selections. Each collection is organized by our head curator to express cohesive structural themes, palettes, and light interactions suitable for residential and public exhibition.
+              Explore our current seasonal selections. Each collection is organized by our head
+              curator to express cohesive structural themes, palettes, and light interactions
+              suitable for residential and public exhibition.
             </p>
             <div className="w-12 h-[1px] bg-accent mx-auto mt-8" />
           </Container>

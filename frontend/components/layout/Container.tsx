@@ -12,13 +12,7 @@ export const Container: React.FC<ContainerProps> = ({
   clean = false,
 }) => {
   return (
-    <div
-      className={
-        clean
-          ? className
-          : `mx-auto max-w-7xl px-6 lg:px-12 ${className}`
-      }
-    >
+    <div className={clean ? className : `mx-auto max-w-7xl px-6 lg:px-12 ${className}`}>
       {children}
     </div>
   );
