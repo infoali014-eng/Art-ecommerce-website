@@ -2,30 +2,66 @@ import { createClient } from '@/lib/supabase/client';
 
 const supabase = createClient();
 
+let isAuthenticating = false;
+
 export const AuthService = {
   async login(email: string, password: string) {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
-    return data;
+    if (isAuthenticating) {
+      throw new Error('Authentication request is already in progress.');
+    }
+
+    // Pre-check: skip if already authenticated
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      return { user: session.user, session };
+    }
+
+    isAuthenticating = true;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      return data;
+    } finally {
+      isAuthenticating = false;
+    }
   },
 
   async register(email: string, password: string, fullName: string) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
+    if (isAuthenticating) {
+      throw new Error('Authentication request is already in progress.');
+    }
+
+    // Pre-check: skip if already authenticated
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      return { user: session.user, session };
+    }
+
+    isAuthenticating = true;
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+          emailRedirectTo:
+            typeof window !== 'undefined' ? `${window.location.origin}/login` : undefined,
         },
-        emailRedirectTo:
-          typeof window !== 'undefined' ? `${window.location.origin}/login` : undefined,
-      },
-    });
-    if (error) throw error;
-    return data;
+      });
+      if (error) throw error;
+      return data;
+    } finally {
+      isAuthenticating = false;
+    }
   },
 
   async logout() {
@@ -43,9 +79,7 @@ export const AuthService = {
   },
 
   async updatePassword(password: string) {
-    const { data, error } = await supabase.auth.updateUser({
-      password,
-    });
+    const { data, error } = await supabase.auth.updateUser({ password });
     if (error) throw error;
     return data;
   },
@@ -61,6 +95,11 @@ export const AuthService = {
 
   mapAuthError(error: unknown): string {
     if (!error) return 'An unexpected error occurred. Please try again.';
+
+    // Log authentication errors only in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Supabase Auth Error:', error);
+    }
 
     let message = '';
     let status: number | undefined;
@@ -91,9 +130,10 @@ export const AuthService = {
     if (
       status === 429 ||
       message.toLowerCase().includes('rate limit') ||
-      message.toLowerCase().includes('too many requests')
+      message.toLowerCase().includes('too many requests') ||
+      message.toLowerCase().includes('too many login attempts')
     ) {
-      return 'Too many login attempts. Please wait a few minutes before trying again.';
+      return 'Too many login attempts detected by Supabase. Please wait a few minutes before trying again.';
     }
 
     return message || 'An authentication error occurred. Please try again.';

@@ -26,8 +26,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const supabase = createClient();
   const router = useRouter();
+  const initializedRef = React.useRef(false);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
     const initAuth = async () => {
       try {
         const {
