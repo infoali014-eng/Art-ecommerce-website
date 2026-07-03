@@ -94,3 +94,89 @@ export interface UserProfile {
   createdAt: string;
   updatedAt: string;
 }
+
+export type CommissionStatus =
+  | 'Draft'
+  | 'Submitted'
+  | 'Under Review'
+  | 'Quotation Sent'
+  | 'Waiting For Approval'
+  | 'Approved'
+  | 'Rejected'
+  | 'In Progress'
+  | 'Preview Ready'
+  | 'Revision Requested'
+  | 'Final Review'
+  | 'Completed'
+  | 'Delivered'
+  | 'Cancelled';
+
+export interface Commission {
+  id: string;
+  userId: string;
+  title: string;
+  artworkType: string;
+  description: string;
+  specialInstructions?: string;
+  customerBudget: number;
+  quotedPrice?: number;
+  width?: number;
+  height?: number;
+  sizeUnit: string;
+  orientation?: string;
+  frameOption?: string;
+  preferredStyle?: string;
+  preferredColors?: string[];
+  artworkPurpose?: string;
+  deadline?: string;
+  status: CommissionStatus;
+  paymentStatus: string;
+  assignedArtistId?: string;
+  estimatedCompletion?: string;
+  adminNotes?: string;
+  internalNotes?: string;
+  quotationNotes?: string;
+  priority: string;
+  completionPercentage: number;
+  createdAt: string;
+  updatedAt: string;
+  referenceImages?: CommissionReference[];
+  updates?: CommissionUpdate[];
+}
+
+export interface CommissionReference {
+  id: number;
+  commissionId: string;
+  imageUrl: string;
+  displayOrder: number;
+  createdAt: string;
+}
+
+export interface CommissionUpdate {
+  id: number;
+  commissionId: string;
+  oldStatus?: string;
+  newStatus: string;
+  message?: string;
+  createdBy?: string;
+  createdAt: string;
+}
+
+export interface CommissionDraft {
+  id?: string;
+  artworkType?: string;
+  title?: string;
+  description?: string;
+  specialInstructions?: string;
+  customerBudget?: number;
+  deadline?: string;
+  width?: number;
+  height?: number;
+  sizeUnit?: string;
+  orientation?: string;
+  frameOption?: string;
+  preferredStyle?: string;
+  preferredColors?: string[];
+  artworkPurpose?: string;
+  medium?: string; // Step 4 specification selection
+}
