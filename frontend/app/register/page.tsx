@@ -51,8 +51,10 @@ export default function RegisterPage() {
 
     try {
       await AuthService.register(email, password, fullName);
-      addToast('Registration successful! Please verify your email.', 'success');
-      router.push('/register/success');
+      // Automatically log in the user right after registration
+      await AuthService.login(email, password);
+      addToast('Registration successful! You have been logged in.', 'success');
+      router.push('/');
     } catch (err) {
       setError(AuthService.mapAuthError(err));
     } finally {
