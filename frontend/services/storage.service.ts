@@ -27,5 +27,20 @@ export const StorageService = {
     const { data } = supabase.storage.from(bucketName).getPublicUrl(path);
     return data.publicUrl;
   },
+
+  async listBuckets() {
+    const { data, error } = await supabase.storage.listBuckets();
+    if (error) throw error;
+    return data;
+  },
+
+  async listFiles(bucketName: string, path: string = '') {
+    const { data, error } = await supabase.storage.from(bucketName).list(path, {
+      limit: 100,
+      sortBy: { column: 'name', order: 'asc' },
+    });
+    if (error) throw error;
+    return data;
+  },
 };
 export default StorageService;

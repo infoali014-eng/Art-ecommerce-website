@@ -96,11 +96,6 @@ export const AuthService = {
   mapAuthError(error: unknown): string {
     if (!error) return 'An unexpected error occurred. Please try again.';
 
-    // Log authentication errors only in development mode
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Supabase Auth Error:', error);
-    }
-
     let message = '';
     let status: number | undefined;
 
@@ -108,6 +103,13 @@ export const AuthService = {
       const err = error as { message?: string; status?: number };
       message = err.message || '';
       status = err.status;
+    }
+
+    // Log authentication errors clearly only in development mode without crash tracebacks
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        `[Supabase Auth API Rejection Log] Status: ${status || 'unknown'}, Message: "${message}"`
+      );
     }
 
     // Handle standard network error
@@ -131,7 +133,8 @@ export const AuthService = {
       status === 429 ||
       message.toLowerCase().includes('rate limit') ||
       message.toLowerCase().includes('too many requests') ||
-      message.toLowerCase().includes('too many login attempts')
+      message.toLowerCase().includes('too many login attempts') ||
+      message.toLowerCase().includes('rate limit exceeded')
     ) {
       return 'Too many login attempts detected by Supabase. Please wait a few minutes before trying again.';
     }

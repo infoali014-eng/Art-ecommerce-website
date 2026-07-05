@@ -10,8 +10,11 @@ export function mapDbProfileToUi(dbProfile: any): UserProfile {
     id: dbProfile.id,
     fullName: dbProfile.full_name || '',
     avatarUrl: dbProfile.avatar_url || '',
+    role: dbProfile.role || 'customer',
+    adminRole: dbProfile.admin_role || undefined,
     createdAt: dbProfile.created_at,
     updatedAt: dbProfile.updated_at,
+    deletedAt: dbProfile.deleted_at || undefined,
   };
 }
 

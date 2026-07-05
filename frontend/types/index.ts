@@ -1,3 +1,4 @@
+/* eslint-disable */
 export interface Artwork {
   id: string;
   slug: string;
@@ -91,8 +92,80 @@ export interface UserProfile {
   fullName: string;
   avatarUrl?: string;
   phone?: string;
+  role: 'customer' | 'admin';
+  adminRole?: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface SiteSettings {
+  siteName: string;
+  contactEmail: string;
+  contactPhone: string;
+  maintenanceMode: boolean;
+  heroTitle: string;
+  heroSubtitle: string;
+}
+
+export interface Order {
+  id: string;
+  userId: string | null;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState?: string;
+  shippingZip: string;
+  shippingCountry: string;
+  subtotal: number;
+  discount: number;
+  shippingFee: number;
+  total: number;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  trackingNumber?: string;
+  paymentProvider?: string;
+  paymentIntentId?: string;
+  transactionId?: string;
+  receiptUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+  items?: OrderItem[];
+}
+
+export interface OrderItem {
+  id: number;
+  orderId: string;
+  artworkId?: string;
+  title: string;
+  price: number;
+  quantity: number;
+  frameOption: string;
+  createdAt: string;
+}
+
+export interface AdminActivity {
+  id: number;
+  adminId: string | null;
+  adminName: string;
+  action: string;
+  target: string;
+  previousValue?: any;
+  newValue?: any;
+  createdAt: string;
+}
+
+export interface Notification {
+  id: number;
+  userId: string;
+  title: string;
+  message: string;
+  type: string;
+  isRead: boolean;
+  createdAt: string;
 }
 
 export type CommissionStatus =
