@@ -253,3 +253,20 @@ export interface CommissionDraft {
   artworkPurpose?: string;
   medium?: string; // Step 4 specification selection
 }
+
+export interface DashboardStats {
+  totalUsers: number;
+  totalArtworks: number;
+  totalOrders: number;
+  totalCommissions: number;
+  revenue: number;
+  pendingCommissions: number;
+  completedOrders: number;
+  storageUsage: {
+    totalBytes: number;
+    fileCount: number;
+  };
+  newestUsers: UserProfile[];
+  newestOrders: Order[];
+  latestCommissions: Commission[];
+}
