@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { createClient } from '@/lib/supabase/client';
 import {
   AdminActivity,
@@ -30,7 +29,7 @@ export const AdminRepository = {
     const { data, error } = await query;
     if (error) throw error;
 
-    return (data || []).map((p: any) => ({
+    return (data || []).map((p) => ({
       id: p.id,
       fullName: p.full_name || 'Anonymous',
       avatarUrl: p.avatar_url || undefined,
@@ -117,7 +116,7 @@ export const AdminRepository = {
     if (error) throw error;
 
     const settingsMap: Record<string, string> = {};
-    (data || []).forEach((row: any) => {
+    (data || []).forEach((row) => {
       settingsMap[row.key] = row.value || '';
     });
 
@@ -206,7 +205,7 @@ export const AdminRepository = {
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    return (data || []).map((n: any) => ({
+    return (data || []).map((n) => ({
       id: Number(n.id),
       userId: n.user_id,
       title: n.title,
@@ -546,7 +545,7 @@ export const AdminRepository = {
       .order('id', { ascending: true });
     if (error) throw error;
 
-    return (data || []).map((c: any) => ({
+    return (data || []).map((c) => ({
       id: c.id,
       slug: c.id,
       name: c.name,
@@ -592,7 +591,7 @@ export const AdminRepository = {
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    return (data || []).map((col: any) => ({
+    return (data || []).map((col) => ({
       id: col.id,
       slug: col.id,
       name: col.name,
@@ -641,7 +640,7 @@ export const AdminRepository = {
       .order('name', { ascending: true });
     if (error) throw error;
 
-    return (data || []).map((art: any) => ({
+    return (data || []).map((art) => ({
       id: art.id,
       slug: art.id,
       name: art.name,

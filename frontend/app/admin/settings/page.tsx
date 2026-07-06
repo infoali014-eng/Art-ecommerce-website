@@ -203,8 +203,8 @@ export default function AdminSettingsPage() {
 
         {/* Submit */}
         <div className="pt-6 border-t border-primary/5 flex justify-end">
-          <LoadingButton type="submit" variant="primary" loading={saveLoading} >
-            {!saveLoading && <Save className="w-4 h-4 mr-2" />}Save Configurations
+          <LoadingButton type="submit" variant="primary" loading={saveLoading} icon={Save}>
+            Save Configurations
           </LoadingButton>
         </div>
       </form>

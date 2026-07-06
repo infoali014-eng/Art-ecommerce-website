@@ -1,4 +1,3 @@
-/* eslint-disable */
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -11,7 +10,6 @@ import {
   FileText,
   Send,
   UserCheck,
-  Eye,
 } from 'lucide-react';
 import { AdminRepository } from '@/repositories/admin.repository';
 import { AdminService } from '@/services/admin.service';

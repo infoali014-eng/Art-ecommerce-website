@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { createClient } from '@/lib/supabase/client';
 
 const supabase = createClient();
@@ -34,7 +33,7 @@ export const StatisticsService = {
       monthlySum[m] = 0;
     });
 
-    (data || []).forEach((row: any) => {
+    (data || []).forEach((row) => {
       const date = new Date(row.created_at);
       const monthLabel = months[date.getMonth()];
       monthlySum[monthLabel] += Number(row.total);

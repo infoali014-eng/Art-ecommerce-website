@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { AdminRepository } from '@/repositories/admin.repository';
 import { Artist, Artwork, Category, Collection, SiteSettings } from '@/types';
 
