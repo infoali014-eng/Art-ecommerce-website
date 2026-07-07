@@ -73,9 +73,9 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <Link
             href="/"
-            className="font-cormorant text-2xl font-semibold tracking-[0.2em] text-primary hover:text-accent transition-colors duration-300"
+            className="font-cormorant text-xl font-semibold tracking-[0.1em] text-primary hover:text-accent transition-colors duration-300"
           >
-            AURA
+            MANAN ART GALLERY
           </Link>
 
           {/* Desktop Menu */}

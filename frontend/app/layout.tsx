@@ -22,7 +22,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
-    template: `%s | AURA`,
+    template: `%s | Manan Art Gallery`,
   },
   description: siteConfig.description,
   keywords: [
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
     'museum quality',
     'fine art',
   ],
-  authors: [{ name: 'AURA Gallery' }],
-  creator: 'AURA Gallery',
+  authors: [{ name: 'Manan Art Gallery' }],
+  creator: 'Manan Art Gallery',
   metadataBase: new URL(siteConfig.url),
   openGraph: {
     type: 'website',
@@ -44,13 +44,13 @@ export const metadata: Metadata = {
     url: siteConfig.url,
     title: siteConfig.name,
     description: siteConfig.description,
-    siteName: 'AURA Gallery',
+    siteName: 'Manan Art Gallery',
     images: [
       {
         url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: 'AURA Premium Art Gallery',
+        alt: 'Manan Art Gallery',
       },
     ],
   },
@@ -71,6 +71,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+import { WhatsAppButton } from '@/components/sections/WhatsAppButton';
 import ToastContainer from '@/components/ui/Toast';
 import AppProviders from '@/providers/AppProviders';
 
@@ -89,6 +90,7 @@ export default function RootLayout({
         <AppProviders>
           {children}
           <ToastContainer />
+          <WhatsAppButton />
         </AppProviders>
       </body>
     </html>

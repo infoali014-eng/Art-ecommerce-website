@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { AdminRepository } from '@/repositories/admin.repository';
 import { AdminService } from '@/services/admin.service';
+import { StorageService } from '@/services/storage.service';
 
 import { Collection } from '@/types';
 
@@ -271,13 +272,45 @@ export default function AdminCollectionsPage() {
             <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
               Curator Cover Image URL
             </label>
-            <input
-              type="text"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              placeholder="https://example.com/cover.jpg"
-              className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2 focus:outline-none focus:border-accent rounded-sm"
-            />
+            <div className="flex items-center space-x-2 w-full">
+              <input
+                type="text"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                placeholder="https://example.com/cover.jpg"
+                className="flex-1 bg-[#FAF8F5] border border-primary/5 px-3 py-2 focus:outline-none focus:border-accent rounded-sm text-xs"
+              />
+              <input
+                type="file"
+                id="file-upload-collection-cover"
+                className="hidden"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    setFormLoading(true);
+                    const cleanedName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9./_-]/g, '_')}`;
+                    await StorageService.uploadFile('artworks', cleanedName, file);
+                    const publicUrl = StorageService.getPublicUrl('artworks', cleanedName);
+                    setImage(publicUrl);
+                    addToast('Cover image uploaded successfully!', 'success');
+                  } catch (err) {
+                    console.error(err);
+                    addToast('Failed to upload cover image.', 'error');
+                  } finally {
+                    setFormLoading(false);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => document.getElementById('file-upload-collection-cover')?.click()}
+                className="px-3 py-2 bg-primary hover:bg-accent text-white hover:text-primary transition-colors text-xs font-semibold rounded-sm cursor-pointer"
+              >
+                Upload
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1">

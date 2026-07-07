@@ -244,10 +244,11 @@ export default function CustomOrderPage() {
                     <div className="space-y-8">
                       <div>
                         <h3 className="font-cormorant text-2xl font-light text-primary tracking-wide">
-                          Select Artwork Type
+                          Select Artwork Type (Art ki Type choose karein)
                         </h3>
                         <p className="text-xs text-secondary font-light mt-1">
-                          Choose the visual category that best matches your commission vision.
+                          Select what kind of art you want us to create for you. (Aap kis tarah ka
+                          art banwana chahte hain?)
                         </p>
                       </div>
 
@@ -285,11 +286,12 @@ export default function CustomOrderPage() {
                     <div className="space-y-8">
                       <div>
                         <h3 className="font-cormorant text-2xl font-light text-primary tracking-wide">
-                          Reference Material
+                          Reference & Ideas (Sample ya reference pictures)
                         </h3>
                         <p className="text-xs text-secondary font-light mt-1">
-                          Upload visual mockups, space photos, or design inspirations. Maximum 10
-                          images (10MB max each, JPG/PNG/WEBP).
+                          Upload pictures of designs, wall spaces, or ideas you like. You can upload
+                          up to 10 photos. (Sample designs ya deewar ki pictures yahan upload
+                          karein)
                         </p>
                       </div>
 
@@ -353,11 +355,11 @@ export default function CustomOrderPage() {
                     <div className="space-y-8">
                       <div>
                         <h3 className="font-cormorant text-2xl font-light text-primary tracking-wide">
-                          Artwork Requirements
+                          Artwork Details (Art ki details)
                         </h3>
                         <p className="text-xs text-secondary font-light mt-1">
-                          Define your style aesthetic, theme focus, budget bounds, and expected
-                          timeline.
+                          Tell us about your budget, timeline, and design choices. (Apne budget aur
+                          design details likhein)
                         </p>
                       </div>
 
@@ -365,7 +367,7 @@ export default function CustomOrderPage() {
                         {/* Title */}
                         <div className="space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Request Title
+                            Request Title (Order ka Name)
                           </label>
                           <input
                             type="text"
@@ -385,7 +387,7 @@ export default function CustomOrderPage() {
                         {/* Customer Budget */}
                         <div className="space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Your Target Budget ($)
+                            Your Budget in USD (Aapka Budget - $) / Rupees equivalent
                           </label>
                           <div className="relative">
                             <span className="absolute left-3 top-2.5 text-secondary/60 text-xs">
@@ -414,7 +416,7 @@ export default function CustomOrderPage() {
                         <div className="md:col-span-2 space-y-1">
                           <div className="flex justify-between items-center">
                             <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                              Detailed Description
+                              Describe what you want (Kaisa design chahiye, detail likhein)
                             </label>
                             <span className="text-[9px] text-secondary/60">
                               {(draft.description || '').length}/1000 characters
@@ -440,11 +442,12 @@ export default function CustomOrderPage() {
                         {/* Special Instructions */}
                         <div className="md:col-span-2 space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Special Inscriptions or Instructions (Optional)
+                            Special Instructions (Khas cheez likhwani ho, like Ayah number or
+                            signatures - Optional)
                           </label>
                           <input
                             type="text"
-                            placeholder="e.g., Please include verse 55:60 in Gold leaf, or Sign the back only"
+                            placeholder="e.g., Please include Ayah 55:60 in Gold leaf, or Sign the back only"
                             value={draft.specialInstructions || ''}
                             onChange={(e) => updateDraft({ specialInstructions: e.target.value })}
                             className="w-full bg-background border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent text-primary"
@@ -454,7 +457,7 @@ export default function CustomOrderPage() {
                         {/* Target Deadline */}
                         <div className="space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Target Curation Deadline
+                            Deliver By / Deadline (Kab tak delivery chahiye)
                           </label>
                           <input
                             type="date"
@@ -544,10 +547,11 @@ export default function CustomOrderPage() {
                     <div className="space-y-8">
                       <div>
                         <h3 className="font-cormorant text-2xl font-light text-primary tracking-wide">
-                          Artwork Specifications
+                          Artwork Size & Frame (Size aur Frame details)
                         </h3>
                         <p className="text-xs text-secondary font-light mt-1">
-                          Specify dimensions, framing preferences, and medium details.
+                          Please specify sizes in inches and frame options. (Size aur frame ki
+                          settings select karein)
                         </p>
                       </div>
 
@@ -555,7 +559,7 @@ export default function CustomOrderPage() {
                         {/* Width */}
                         <div className="space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Target Width (inches)
+                            Width in inches (Chorhaye)
                           </label>
                           <input
                             type="number"
@@ -576,7 +580,7 @@ export default function CustomOrderPage() {
                         {/* Height */}
                         <div className="space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Target Height (inches)
+                            Height in inches (Lambaye)
                           </label>
                           <input
                             type="number"
@@ -597,7 +601,7 @@ export default function CustomOrderPage() {
                         {/* Orientation */}
                         <div className="space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Orientation
+                            Orientation (Khara ya Leta hua - Portrait/Landscape)
                           </label>
                           <select
                             value={draft.orientation || ''}
@@ -621,7 +625,7 @@ export default function CustomOrderPage() {
                         {/* Framing Preference */}
                         <div className="space-y-1">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Framing Style
+                            Framing Style (Frame kaisa chahiye)
                           </label>
                           <select
                             value={draft.frameOption || ''}
@@ -645,7 +649,7 @@ export default function CustomOrderPage() {
                         {/* Specific Medium */}
                         <div className="space-y-1 md:col-span-2">
                           <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-                            Specific Medium
+                            Specific Medium (Kaunse materials use ho, e.g. Canvas, Paper etc.)
                           </label>
                           <input
                             type="text"

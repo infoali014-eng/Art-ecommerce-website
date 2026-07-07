@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { AdminRepository } from '@/repositories/admin.repository';
 import { AdminService } from '@/services/admin.service';
+import { StorageService } from '@/services/storage.service';
 
 import { Artist, Artwork, Category, Collection } from '@/types';
 
@@ -799,20 +800,50 @@ export default function AdminArtworksPage() {
             </div>
             <div className="space-y-2">
               {images.map((img, idx) => (
-                <div key={idx} className="flex items-center space-x-2">
+                <div key={idx} className="flex items-center space-x-2 w-full">
                   <input
                     type="text"
                     required
                     placeholder="https://example.com/image.jpg"
                     value={img}
                     onChange={(e) => handleImageChange(idx, e.target.value)}
-                    className="flex-1 bg-[#FAF8F5] border border-primary/5 px-3 py-2 focus:outline-none focus:border-accent rounded-sm"
+                    className="flex-1 bg-[#FAF8F5] border border-primary/5 px-3 py-2 focus:outline-none focus:border-accent rounded-sm text-xs"
                   />
+                  <input
+                    type="file"
+                    id={`file-upload-artwork-${idx}`}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        setFormLoading(true);
+                        const cleanedName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9./_-]/g, '_')}`;
+                        await StorageService.uploadFile('artworks', cleanedName, file);
+                        const publicUrl = StorageService.getPublicUrl('artworks', cleanedName);
+                        handleImageChange(idx, publicUrl);
+                        addToast('Image uploaded successfully!', 'success');
+                      } catch (err) {
+                        console.error(err);
+                        addToast('Failed to upload image.', 'error');
+                      } finally {
+                        setFormLoading(false);
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById(`file-upload-artwork-${idx}`)?.click()}
+                    className="px-3 py-2 bg-primary hover:bg-accent text-white hover:text-primary transition-colors text-xs font-semibold rounded-sm cursor-pointer"
+                  >
+                    Upload
+                  </button>
                   {images.length > 1 && (
                     <button
                       type="button"
                       onClick={() => handleRemoveImageRow(idx)}
-                      className="p-2 border border-red-100 text-red-500 hover:bg-red-50 rounded"
+                      className="p-2 border border-red-100 text-red-500 hover:bg-red-50 rounded shrink-0 cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

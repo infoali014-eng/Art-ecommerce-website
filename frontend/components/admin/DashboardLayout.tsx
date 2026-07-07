@@ -86,11 +86,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="h-20 flex items-center justify-between px-6 border-b border-white/5">
           <Link href="/" className="flex items-center space-x-3 group">
             <span className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center font-cormorant text-white font-medium text-lg shadow-[0_2px_10px_rgba(201,173,123,0.3)]">
-              A
+              M
             </span>
             {(!collapsed || mobileOpen) && (
               <span className="font-cormorant text-xl font-light tracking-[0.1em] text-white">
-                AURA{' '}
+                MANAN{' '}
                 <span className="text-accent font-normal text-xs uppercase tracking-widest block font-sans">
                   ADMIN
                 </span>

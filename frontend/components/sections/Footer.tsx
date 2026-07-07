@@ -17,12 +17,12 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand Info */}
           <div className="space-y-6">
-            <h3 className="font-cormorant text-2xl font-semibold tracking-[0.2em] text-white">
-              AURA
+            <h3 className="font-cormorant text-2xl font-semibold tracking-[0.1em] text-white">
+              MANAN ART GALLERY
             </h3>
             <p className="font-sans text-xs text-background/60 leading-relaxed font-light">
               An elegant space dedicated to showcasing fine original art, calligraphic scripts, and
-              pencil studies. Designing luxury assets for timeless interiors.
+              pencil studies. Discover local master artworks in Pakistan.
             </p>
           </div>
 

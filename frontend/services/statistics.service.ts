@@ -48,7 +48,7 @@ export const StatisticsService = {
   async getCategorySalesShare(): Promise<{ category: string; value: number }[]> {
     const { data, error } = await supabase
       .from('order_items')
-      .select('price, quantity, artwork_id, artworks(category)');
+      .select('price, quantity, artwork_id, artworks(category_id)');
 
     if (error) throw error;
 
@@ -59,7 +59,7 @@ export const StatisticsService = {
     };
 
     (data || []).forEach((item: any) => {
-      const category = item.artworks?.category || 'paintings';
+      const category = item.artworks?.category_id || 'paintings';
       const revenue = Number(item.price) * Number(item.quantity || 1);
       shares[category] = (shares[category] || 0) + revenue;
     });
