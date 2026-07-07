@@ -2,7 +2,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { HardDrive, Trash2, Image as ImageIcon, ExternalLink, Calendar, Paperclip } from 'lucide-react';
+import {
+  HardDrive,
+  Trash2,
+  Image as ImageIcon,
+  ExternalLink,
+  Calendar,
+  Paperclip,
+} from 'lucide-react';
 import { StorageService } from '@/services/storage.service';
 import { useToast } from '@/hooks/useToast';
 import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
@@ -26,6 +33,27 @@ export default function AdminStoragePage() {
   // Deletion state
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+
+  // Upload state
+  const [uploading, setUploading] = useState(false);
+
+  const handleUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedBucket) return;
+
+    try {
+      setUploading(true);
+      const cleanedName = file.name.replace(/[^a-zA-Z0-9./_-]/g, '_');
+      await StorageService.uploadFile(selectedBucket, cleanedName, file);
+      addToast('Asset uploaded successfully!', 'success');
+      loadFiles();
+    } catch (err) {
+      console.error(err);
+      addToast('Failed to upload asset.', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const loadBuckets = async () => {
     try {
@@ -117,21 +145,42 @@ export default function AdminStoragePage() {
           </h1>
         </div>
 
-        {/* Bucket Select */}
+        {/* Bucket Select & Upload */}
         {!loadingBuckets && buckets.length > 0 && (
-          <div className="flex items-center space-x-2 text-xs">
-            <span className="text-secondary font-medium uppercase tracking-wider text-[10px]">Bucket:</span>
-            <select
-              value={selectedBucket}
-              onChange={(e) => setSelectedBucket(e.target.value)}
-              className="bg-white border border-primary/5 px-3 py-1.5 focus:outline-none focus:border-accent rounded-sm font-semibold text-primary"
+          <div className="flex items-center space-x-4 text-xs">
+            <div className="flex items-center space-x-2">
+              <span className="text-secondary font-medium uppercase tracking-wider text-[10px]">
+                Bucket:
+              </span>
+              <select
+                value={selectedBucket}
+                onChange={(e) => setSelectedBucket(e.target.value)}
+                className="bg-white border border-primary/5 px-3 py-1.5 focus:outline-none focus:border-accent rounded-sm font-semibold text-primary"
+              >
+                {buckets.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name} ({b.id})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <input
+              type="file"
+              id="storage-upload-input"
+              className="hidden"
+              onChange={handleUploadFile}
+              disabled={uploading}
+              accept="image/*"
+            />
+            <button
+              type="button"
+              onClick={() => document.getElementById('storage-upload-input')?.click()}
+              disabled={uploading}
+              className="bg-primary hover:bg-accent text-white hover:text-primary transition-colors duration-150 px-4 py-2 text-xs uppercase font-semibold tracking-wider rounded-sm disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
             >
-              {buckets.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.name} ({b.id})
-                </option>
-              ))}
-            </select>
+              {uploading ? 'Uploading...' : 'Upload Asset'}
+            </button>
           </div>
         )}
       </div>
@@ -207,14 +256,24 @@ export default function AdminStoragePage() {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex justify-end pt-2 border-t border-primary/5">
+                      <div className="flex justify-between items-center pt-2 border-t border-primary/5 w-full">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(publicUrl);
+                            addToast('URL copied to clipboard!', 'success');
+                          }}
+                          className="flex items-center space-x-1 px-2.5 py-1.5 text-[10px] uppercase font-semibold tracking-wider border border-accent/20 text-accent hover:bg-accent/5 rounded transition-colors duration-150 cursor-pointer"
+                        >
+                          <span>Copy URL</span>
+                        </button>
                         <button
                           type="button"
                           onClick={() => handleDeleteClick(file.name)}
-                          className="flex items-center space-x-1 px-2.5 py-1.5 text-[10px] uppercase font-semibold tracking-wider border border-red-100 text-red-500 hover:bg-red-50 rounded transition-colors duration-150"
+                          className="flex items-center space-x-1 px-2.5 py-1.5 text-[10px] uppercase font-semibold tracking-wider border border-red-100 text-red-500 hover:bg-red-50 rounded transition-colors duration-150 cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
-                          <span>Delete File</span>
+                          <span>Delete</span>
                         </button>
                       </div>
                     </div>
