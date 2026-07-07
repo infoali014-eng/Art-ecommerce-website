@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Layers, Plus, Edit2, Trash2 } from 'lucide-react';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { AdminService } from '@/services/admin.service';
-import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
-import { Collection } from '@/types';
+
+import { Edit2, Layers, Plus, Trash2 } from 'lucide-react';
+
+import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import AdminDataTable from '@/components/admin/AdminDataTable';
 import AdminDrawer from '@/components/admin/AdminDrawer';
-import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import LoadingButton from '@/components/ui/LoadingButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
+import { AdminService } from '@/services/admin.service';
+
+import { Collection } from '@/types';
 
 export default function AdminCollectionsPage() {
   const { user } = useAuth();
@@ -153,7 +156,10 @@ export default function AdminCollectionsPage() {
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-primary/5 border border-primary/5 rounded overflow-hidden relative shrink-0">
             <img
-              src={row.image || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'}
+              src={
+                row.image ||
+                'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'
+              }
               alt={val}
               className="object-cover w-full h-full"
             />
@@ -215,7 +221,9 @@ export default function AdminCollectionsPage() {
       {loading ? (
         <div className="bg-white p-12 border border-primary/5 rounded text-center flex flex-col items-center justify-center min-h-[300px]">
           <div className="w-8 h-8 border-2 border-accent/20 border-t-accent rounded-full animate-spin mb-4" />
-          <span className="text-xs text-secondary/60 font-light">Loading collections database...</span>
+          <span className="text-xs text-secondary/60 font-light">
+            Loading collections database...
+          </span>
         </div>
       ) : (
         <AdminDataTable

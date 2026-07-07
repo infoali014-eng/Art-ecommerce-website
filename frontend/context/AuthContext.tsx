@@ -24,7 +24,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState<string | null>(null);
 
-  const supabase = createClient();
+  const supabase = createClient() as any;
   const router = useRouter();
   const initializedRef = React.useRef(false);
 
@@ -41,7 +41,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (initialSession) {
           setSession(initialSession);
           setUser(initialSession.user);
-          setRole(initialSession.user.user_metadata?.role || 'user');
+          if (initialSession.user.email === 'infoali014@gmail.com') {
+            setRole('admin');
+            // Auto-update profiles table in background
+            supabase
+              .from('profiles')
+              .upsert({
+                id: initialSession.user.id,
+                full_name: 'Ali Shair',
+                role: 'admin',
+                admin_role: 'super_admin',
+                updated_at: new Date().toISOString(),
+              })
+              .then(({ error }: { error: any }) => {
+                if (error) console.error('Failed to seed default admin profile:', error);
+              });
+          } else {
+            setRole(initialSession.user.user_metadata?.role || 'user');
+          }
         }
       } catch (e) {
         console.error('Failed to initialize session:', e);
@@ -54,10 +71,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+    } = supabase.auth.onAuthStateChange(async (event: any, currentSession: any) => {
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
-      setRole(currentSession?.user?.user_metadata?.role || 'user');
+      if (currentSession?.user?.email === 'infoali014@gmail.com') {
+        setRole('admin');
+        // Auto-update profiles table in background
+        supabase
+          .from('profiles')
+          .upsert({
+            id: currentSession.user.id,
+            full_name: 'Ali Shair',
+            role: 'admin',
+            admin_role: 'super_admin',
+            updated_at: new Date().toISOString(),
+          })
+          .then(({ error }: { error: any }) => {
+            if (error) console.error('Failed to seed default admin profile:', error);
+          });
+      } else {
+        setRole(currentSession?.user?.user_metadata?.role || 'user');
+      }
       setLoading(false);
 
       if (event === 'SIGNED_IN') {

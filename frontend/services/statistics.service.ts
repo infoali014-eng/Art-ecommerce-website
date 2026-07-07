@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/client';
 
-const supabase = createClient();
+const supabase = createClient() as any;
 
 export const StatisticsService = {
   async getMonthlyRevenueTrend(): Promise<{ month: string; sales: number }[]> {
@@ -33,7 +33,7 @@ export const StatisticsService = {
       monthlySum[m] = 0;
     });
 
-    (data || []).forEach((row) => {
+    (data || []).forEach((row: any) => {
       const date = new Date(row.created_at);
       const monthLabel = months[date.getMonth()];
       monthlySum[monthLabel] += Number(row.total);

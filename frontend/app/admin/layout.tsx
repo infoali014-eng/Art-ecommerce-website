@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect } from 'react';
+
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+
 import DashboardLayout from '@/components/admin/DashboardLayout';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, role, loading } = useAuth();

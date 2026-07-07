@@ -1,4 +1,3 @@
-/* eslint-disable */
 export interface Database {
   public: {
     Tables: {
@@ -8,6 +7,7 @@ export interface Database {
           full_name: string | null;
           avatar_url: string | null;
           role: 'customer' | 'admin';
+          admin_role: string | null;
           created_at: string;
           updated_at: string;
           deleted_at: string | null;
@@ -17,6 +17,7 @@ export interface Database {
           full_name?: string | null;
           avatar_url?: string | null;
           role?: 'customer' | 'admin';
+          admin_role?: string | null;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;
@@ -26,9 +27,200 @@ export interface Database {
           full_name?: string | null;
           avatar_url?: string | null;
           role?: 'customer' | 'admin';
+          admin_role?: string | null;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;
+        };
+      };
+      site_settings: {
+        Row: {
+          key: string;
+          value: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          value?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          key?: string;
+          value?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      admin_activities: {
+        Row: {
+          id: number;
+          admin_id: string | null;
+          action: string;
+          target: string;
+          previous_value: any;
+          new_value: any;
+          created_at: string;
+        };
+        Insert: {
+          id?: number;
+          admin_id?: string | null;
+          action: string;
+          target: string;
+          previous_value?: any;
+          new_value?: any;
+          created_at?: string;
+        };
+        Update: {
+          id?: number;
+          admin_id?: string | null;
+          action?: string;
+          target?: string;
+          previous_value?: any;
+          new_value?: any;
+          created_at?: string;
+        };
+      };
+      notifications: {
+        Row: {
+          id: number;
+          user_id: string;
+          title: string;
+          message: string;
+          type: string;
+          is_read: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: number;
+          user_id: string;
+          title: string;
+          message: string;
+          type?: string;
+          is_read?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: number;
+          user_id?: string;
+          title?: string;
+          message?: string;
+          type?: string;
+          is_read?: boolean;
+          created_at?: string;
+        };
+      };
+      orders: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          customer_name: string;
+          customer_email: string;
+          customer_phone: string | null;
+          shipping_address: string;
+          shipping_city: string;
+          shipping_state: string | null;
+          shipping_zip: string;
+          shipping_country: string;
+          subtotal: number;
+          discount: number;
+          shipping_fee: number;
+          total: number;
+          status: string;
+          payment_status: string;
+          payment_method: string;
+          tracking_number: string | null;
+          payment_provider: string | null;
+          payment_intent_id: string | null;
+          transaction_id: string | null;
+          receipt_url: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          customer_name: string;
+          customer_email: string;
+          customer_phone?: string | null;
+          shipping_address: string;
+          shipping_city: string;
+          shipping_state?: string | null;
+          shipping_zip: string;
+          shipping_country: string;
+          subtotal?: number;
+          discount?: number;
+          shipping_fee?: number;
+          total?: number;
+          status?: string;
+          payment_status?: string;
+          payment_method: string;
+          tracking_number?: string | null;
+          payment_provider?: string | null;
+          payment_intent_id?: string | null;
+          transaction_id?: string | null;
+          receipt_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          customer_name?: string;
+          customer_email?: string;
+          customer_phone?: string | null;
+          shipping_address?: string;
+          shipping_city?: string;
+          shipping_state?: string | null;
+          shipping_zip?: string;
+          shipping_country?: string;
+          subtotal?: number;
+          discount?: number;
+          shipping_fee?: number;
+          total?: number;
+          status?: string;
+          payment_status?: string;
+          payment_method?: string;
+          tracking_number?: string | null;
+          payment_provider?: string | null;
+          payment_intent_id?: string | null;
+          transaction_id?: string | null;
+          receipt_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      order_items: {
+        Row: {
+          id: number;
+          order_id: string;
+          artwork_id: string | null;
+          title: string;
+          price: number;
+          quantity: number;
+          frame_option: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: number;
+          order_id: string;
+          artwork_id?: string | null;
+          title: string;
+          price?: number;
+          quantity?: number;
+          frame_option?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: number;
+          order_id?: string;
+          artwork_id?: string | null;
+          title?: string;
+          price?: number;
+          quantity?: number;
+          frame_option?: string;
+          created_at?: string;
         };
       };
       categories: {

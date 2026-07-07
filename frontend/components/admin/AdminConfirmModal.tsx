@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { AlertTriangle, Info } from 'lucide-react';
 
 interface AdminConfirmModalProps {
@@ -53,9 +54,7 @@ export default function AdminConfirmModal({
               <h3 className="font-cormorant text-xl text-primary font-medium tracking-wide">
                 {title}
               </h3>
-              <p className="text-secondary/70 text-xs font-light leading-relaxed">
-                {message}
-              </p>
+              <p className="text-secondary/70 text-xs font-light leading-relaxed">{message}</p>
             </div>
           </div>
         </div>

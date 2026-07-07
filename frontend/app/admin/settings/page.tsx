@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Settings, Globe, Mail, Phone, ShieldAlert, Save } from 'lucide-react';
+
+import { Globe, Mail, Phone, Save, Settings, ShieldAlert } from 'lucide-react';
+
+import LoadingButton from '@/components/ui/LoadingButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
 import { AdminRepository } from '@/repositories/admin.repository';
 import { AdminService } from '@/services/admin.service';
-import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
-import LoadingButton from '@/components/ui/LoadingButton';
 
 export default function AdminSettingsPage() {
   const { user } = useAuth();
@@ -90,7 +92,10 @@ export default function AdminSettingsPage() {
       </div>
 
       {/* Settings Form */}
-      <form onSubmit={handleSave} className="space-y-6 text-xs text-secondary bg-white border border-primary/5 p-6 md:p-8 rounded-sm shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
+      <form
+        onSubmit={handleSave}
+        className="space-y-6 text-xs text-secondary bg-white border border-primary/5 p-6 md:p-8 rounded-sm shadow-[0_2px_8px_rgba(0,0,0,0.01)]"
+      >
         {/* Core Metadata */}
         <div className="space-y-4">
           <h3 className="font-cormorant text-lg text-primary font-medium tracking-wide border-b border-primary/5 pb-2 flex items-center">
@@ -184,9 +189,12 @@ export default function AdminSettingsPage() {
           </h3>
           <div className="bg-amber-50 border border-amber-100 p-4 rounded flex items-center justify-between">
             <div className="space-y-0.5 max-w-md">
-              <span className="font-semibold text-amber-800 text-[11px] block">Toggle Maintenance Lock Mode</span>
+              <span className="font-semibold text-amber-800 text-[11px] block">
+                Toggle Maintenance Lock Mode
+              </span>
               <p className="text-[10px] text-amber-700/80 font-light leading-relaxed font-sans">
-                When activated, public catalog pages are locked behind a maintenance message screen for visitors. Authenticated admins can still edit.
+                When activated, public catalog pages are locked behind a maintenance message screen
+                for visitors. Authenticated admins can still edit.
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer select-none">
@@ -203,8 +211,8 @@ export default function AdminSettingsPage() {
 
         {/* Submit */}
         <div className="pt-6 border-t border-primary/5 flex justify-end">
-          <LoadingButton type="submit" variant="primary" loading={saveLoading} icon={Save}>
-            Save Configurations
+          <LoadingButton type="submit" variant="primary" loading={saveLoading}>
+            {!saveLoading && <Save className="w-4 h-4 mr-2 inline-block" />}Save Configurations
           </LoadingButton>
         </div>
       </form>

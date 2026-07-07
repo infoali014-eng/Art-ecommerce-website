@@ -1,7 +1,15 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, SlidersHorizontal, Search } from 'lucide-react';
+
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Search,
+  SlidersHorizontal,
+} from 'lucide-react';
 
 interface Column<T> {
   key: string;
@@ -192,8 +200,8 @@ export default function AdminDataTable<T extends Record<string, any>>({
                     act.variant === 'danger'
                       ? 'bg-red-50 text-red-600 hover:bg-red-100'
                       : act.variant === 'primary'
-                      ? 'bg-accent text-white hover:bg-accent/90'
-                      : 'bg-white border border-primary/5 hover:bg-primary/5 text-secondary'
+                        ? 'bg-accent text-white hover:bg-accent/90'
+                        : 'bg-white border border-primary/5 hover:bg-primary/5 text-secondary'
                   }`}
                 >
                   {act.label} ({selectedRows.size})
@@ -270,9 +278,13 @@ export default function AdminDataTable<T extends Record<string, any>>({
                   >
                     <div className="flex items-center space-x-1">
                       <span>{col.label}</span>
-                      {col.sortable && sortKey === col.key && (
-                        sortOrder === 'asc' ? <ChevronUp className="w-3.5 h-3.5 text-accent" /> : <ChevronDown className="w-3.5 h-3.5 text-accent" />
-                      )}
+                      {col.sortable &&
+                        sortKey === col.key &&
+                        (sortOrder === 'asc' ? (
+                          <ChevronUp className="w-3.5 h-3.5 text-accent" />
+                        ) : (
+                          <ChevronDown className="w-3.5 h-3.5 text-accent" />
+                        ))}
                     </div>
                   </th>
                 ))}
@@ -292,10 +304,7 @@ export default function AdminDataTable<T extends Record<string, any>>({
                       } ${isSelected ? 'bg-accent/5' : ''}`}
                     >
                       {bulkActions.length > 0 && (
-                        <td
-                          className="p-4 text-center"
-                          onClick={(e) => e.stopPropagation()}
-                        >
+                        <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
                           <input
                             type="checkbox"
                             checked={isSelected}
@@ -334,8 +343,8 @@ export default function AdminDataTable<T extends Record<string, any>>({
           <div className="px-6 py-4 border-t border-primary/5 flex items-center justify-between bg-[#FAF8F5]">
             <div className="text-[11px] text-secondary font-light">
               Showing {(currentPage - 1) * rowsPerPage + 1} to{' '}
-              {Math.min(currentPage * rowsPerPage, processedData.length)} of{' '}
-              {processedData.length} entries
+              {Math.min(currentPage * rowsPerPage, processedData.length)} of {processedData.length}{' '}
+              entries
             </div>
 
             <div className="flex items-center space-x-2">

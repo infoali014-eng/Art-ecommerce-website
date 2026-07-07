@@ -1,8 +1,9 @@
 import { createClient } from '@/lib/supabase/client';
 import { AdminRepository } from '@/repositories/admin.repository';
+
 import { DashboardStats } from '@/types';
 
-const supabase = createClient();
+const supabase = createClient() as any;
 
 export const DashboardService = {
   async getStats(): Promise<DashboardStats> {
@@ -58,7 +59,10 @@ export const DashboardService = {
     const pendingCommissions = pendingCommRes.count || 0;
     const completedOrders = completedOrdRes.count || 0;
 
-    const revenue = (revenueRes.data || []).reduce((sum, row) => sum + Number(row.total), 0);
+    const revenue = (revenueRes.data || []).reduce(
+      (sum: number, row: any) => sum + Number(row.total),
+      0
+    );
 
     // 5. Fetch newest users, newest orders, and latest commissions
     const newestUsersPromise = AdminRepository.getUsers();

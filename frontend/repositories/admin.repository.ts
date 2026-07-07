@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
+
 import {
   AdminActivity,
   Artist,
@@ -12,15 +13,12 @@ import {
   UserProfile,
 } from '@/types';
 
-const supabase = createClient();
+const supabase = createClient() as any;
 
 export const AdminRepository = {
   // --- USERS MANAGEMENT ---
   async getUsers(search: string = ''): Promise<UserProfile[]> {
-    let query = supabase
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
+    let query = supabase.from('profiles').select('*').order('created_at', { ascending: false });
 
     if (search) {
       query = query.or(`full_name.ilike.%${search}%,id.eq.${search}`);
@@ -29,7 +27,7 @@ export const AdminRepository = {
     const { data, error } = await query;
     if (error) throw error;
 
-    return (data || []).map((p) => ({
+    return (data || []).map((p: any) => ({
       id: p.id,
       fullName: p.full_name || 'Anonymous',
       avatarUrl: p.avatar_url || undefined,
@@ -112,7 +110,10 @@ export const AdminRepository = {
 
   // --- SITE SETTINGS ---
   async getSiteSettings(): Promise<SiteSettings> {
-    const { data, error } = await supabase.from('site_settings').select('*');
+    const { data, error } = (await supabase.from('site_settings').select('*')) as {
+      data: any[] | null;
+      error: any;
+    };
     if (error) throw error;
 
     const settingsMap: Record<string, string> = {};
@@ -126,7 +127,8 @@ export const AdminRepository = {
       contactPhone: settingsMap['contact_phone'] || '+1 (800) 555-AURA',
       maintenanceMode: settingsMap['maintenance_mode'] === 'true',
       heroTitle: settingsMap['hero_title'] || 'Acquire Timeless Masterpieces',
-      heroSubtitle: settingsMap['hero_subtitle'] || 'Co-create with master calligraphers and modern painters.',
+      heroSubtitle:
+        settingsMap['hero_subtitle'] || 'Co-create with master calligraphers and modern painters.',
     };
   },
 
@@ -137,29 +139,29 @@ export const AdminRepository = {
       promises.push(
         supabase
           .from('site_settings')
-          .upsert({ key: 'site_name', value: settings.siteName, updated_at: new Date().toISOString() })
+          .upsert({
+            key: 'site_name',
+            value: settings.siteName,
+            updated_at: new Date().toISOString(),
+          }) as any
       );
     }
     if (settings.contactEmail !== undefined) {
       promises.push(
-        supabase
-          .from('site_settings')
-          .upsert({
-            key: 'contact_email',
-            value: settings.contactEmail,
-            updated_at: new Date().toISOString(),
-          })
+        supabase.from('site_settings').upsert({
+          key: 'contact_email',
+          value: settings.contactEmail,
+          updated_at: new Date().toISOString(),
+        }) as any
       );
     }
     if (settings.contactPhone !== undefined) {
       promises.push(
-        supabase
-          .from('site_settings')
-          .upsert({
-            key: 'contact_phone',
-            value: settings.contactPhone,
-            updated_at: new Date().toISOString(),
-          })
+        supabase.from('site_settings').upsert({
+          key: 'contact_phone',
+          value: settings.contactPhone,
+          updated_at: new Date().toISOString(),
+        }) as any
       );
     }
     if (settings.maintenanceMode !== undefined) {
@@ -168,25 +170,27 @@ export const AdminRepository = {
           key: 'maintenance_mode',
           value: settings.maintenanceMode ? 'true' : 'false',
           updated_at: new Date().toISOString(),
-        })
+        }) as any
       );
     }
     if (settings.heroTitle !== undefined) {
       promises.push(
         supabase
           .from('site_settings')
-          .upsert({ key: 'hero_title', value: settings.heroTitle, updated_at: new Date().toISOString() })
+          .upsert({
+            key: 'hero_title',
+            value: settings.heroTitle,
+            updated_at: new Date().toISOString(),
+          }) as any
       );
     }
     if (settings.heroSubtitle !== undefined) {
       promises.push(
-        supabase
-          .from('site_settings')
-          .upsert({
-            key: 'hero_subtitle',
-            value: settings.heroSubtitle,
-            updated_at: new Date().toISOString(),
-          })
+        supabase.from('site_settings').upsert({
+          key: 'hero_subtitle',
+          value: settings.heroSubtitle,
+          updated_at: new Date().toISOString(),
+        }) as any
       );
     }
 
@@ -198,14 +202,14 @@ export const AdminRepository = {
 
   // --- NOTIFICATIONS ---
   async getNotifications(userId: string): Promise<Notification[]> {
-    const { data, error } = await supabase
+    const { data, error } = (await supabase
       .from('notifications')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })) as any;
     if (error) throw error;
 
-    return (data || []).map((n) => ({
+    return (data || []).map((n: any) => ({
       id: Number(n.id),
       userId: n.user_id,
       title: n.title,
@@ -221,25 +225,28 @@ export const AdminRepository = {
     title: string,
     message: string,
     type: string = 'general'
-  ): Promise<void> {
+  ): Promise<{ error: any }> {
     const { error } = await supabase.from('notifications').insert({
       user_id: userId,
       title,
       message,
       type,
-    });
-    if (error) throw error;
+    } as any);
+    return { error };
   },
 
   async markNotificationRead(id: number): Promise<void> {
-    const { error } = await supabase.from('notifications').update({ is_read: true }).eq('id', id);
+    const { error } = await supabase
+      .from('notifications')
+      .update({ is_read: true } as any)
+      .eq('id', id);
     if (error) throw error;
   },
 
   async markAllNotificationsRead(userId: string): Promise<void> {
     const { error } = await supabase
       .from('notifications')
-      .update({ is_read: true })
+      .update({ is_read: true } as any)
       .eq('user_id', userId);
     if (error) throw error;
   },
@@ -309,10 +316,10 @@ export const AdminRepository = {
 
   // --- COMMISSIONS MANAGEMENT ---
   async getCommissions(): Promise<Commission[]> {
-    const { data, error } = await supabase
+    const { data, error } = (await supabase
       .from('commissions')
       .select('*, commission_reference_images(*), commission_updates(*)')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })) as any;
     if (error) throw error;
 
     return (data || []).map((comm: any) => ({
@@ -366,7 +373,7 @@ export const AdminRepository = {
   async assignArtistToCommission(commissionId: string, artistId: string | null): Promise<void> {
     const { error } = await supabase
       .from('commissions')
-      .update({ assigned_to: artistId, updated_at: new Date().toISOString() })
+      .update({ assigned_to: artistId, updated_at: new Date().toISOString() } as any)
       .eq('id', commissionId);
     if (error) throw error;
   },
@@ -380,7 +387,7 @@ export const AdminRepository = {
   ): Promise<void> {
     const { error: updateError } = await supabase
       .from('commissions')
-      .update({ status, updated_at: new Date().toISOString() })
+      .update({ status, updated_at: new Date().toISOString() } as any)
       .eq('id', commissionId);
     if (updateError) throw updateError;
 
@@ -390,14 +397,14 @@ export const AdminRepository = {
       new_status: status,
       message,
       created_by: adminId,
-    });
+    } as any);
     if (logError) throw logError;
   },
 
   async updateCommissionInternalNotes(commissionId: string, internalNotes: string): Promise<void> {
     const { error } = await supabase
       .from('commissions')
-      .update({ internal_notes: internalNotes, updated_at: new Date().toISOString() })
+      .update({ internal_notes: internalNotes, updated_at: new Date().toISOString() } as any)
       .eq('id', commissionId);
     if (error) throw error;
   },
@@ -414,7 +421,7 @@ export const AdminRepository = {
         quotation_notes: quotationNotes,
         status: 'Quotation Sent',
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('id', commissionId);
     if (error) throw error;
   },
@@ -507,8 +514,10 @@ export const AdminRepository = {
     if (artwork.popular !== undefined) updateObj.popular = artwork.popular;
     if (artwork.newArrival !== undefined) updateObj.new_arrival = artwork.newArrival;
     if (artwork.isOriginal !== undefined) updateObj.is_original = artwork.isOriginal;
-    if (artwork.framingAvailable !== undefined) updateObj.framing_available = artwork.framingAvailable;
-    if (artwork.estimatedDelivery !== undefined) updateObj.estimated_delivery = artwork.estimatedDelivery;
+    if (artwork.framingAvailable !== undefined)
+      updateObj.framing_available = artwork.framingAvailable;
+    if (artwork.estimatedDelivery !== undefined)
+      updateObj.estimated_delivery = artwork.estimatedDelivery;
     if (artwork.tags !== undefined) updateObj.tags = artwork.tags;
     if (artwork.images !== undefined) updateObj.images = artwork.images;
     if (artwork.collection !== undefined) updateObj.collection_id = artwork.collection || null;
@@ -538,14 +547,14 @@ export const AdminRepository = {
 
   // --- CATEGORY CRUD ---
   async getCategories(): Promise<Category[]> {
-    const { data, error } = await supabase
+    const { data, error } = (await supabase
       .from('categories')
       .select('*')
       .is('deleted_at', null)
-      .order('id', { ascending: true });
+      .order('id', { ascending: true })) as any;
     if (error) throw error;
 
-    return (data || []).map((c) => ({
+    return (data || []).map((c: any) => ({
       id: c.id,
       slug: c.id,
       name: c.name,
@@ -560,7 +569,7 @@ export const AdminRepository = {
       name: category.name,
       description: category.description,
       image_url: category.image,
-    });
+    } as any);
     if (error) throw error;
   },
 
@@ -570,28 +579,31 @@ export const AdminRepository = {
     if (category.description !== undefined) updateObj.description = category.description;
     if (category.image !== undefined) updateObj.image_url = category.image;
 
-    const { error } = await supabase.from('categories').update(updateObj).eq('id', id);
+    const { error } = await supabase
+      .from('categories')
+      .update(updateObj as any)
+      .eq('id', id);
     if (error) throw error;
   },
 
   async softDeleteCategory(id: string): Promise<void> {
     const { error } = await supabase
       .from('categories')
-      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() } as any)
       .eq('id', id);
     if (error) throw error;
   },
 
   // --- COLLECTION CRUD ---
   async getCollections(): Promise<Collection[]> {
-    const { data, error } = await supabase
+    const { data, error } = (await supabase
       .from('collections')
       .select('*')
       .is('deleted_at', null)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })) as any;
     if (error) throw error;
 
-    return (data || []).map((col) => ({
+    return (data || []).map((col: any) => ({
       id: col.id,
       slug: col.id,
       name: col.name,
@@ -608,7 +620,7 @@ export const AdminRepository = {
       description: col.description,
       cover_image_url: col.image,
       curator_note: col.curatorNote || null,
-    });
+    } as any);
     if (error) throw error;
   },
 
@@ -619,28 +631,31 @@ export const AdminRepository = {
     if (col.image !== undefined) updateObj.cover_image_url = col.image;
     if (col.curatorNote !== undefined) updateObj.curator_note = col.curatorNote || null;
 
-    const { error } = await supabase.from('collections').update(updateObj).eq('id', id);
+    const { error } = await supabase
+      .from('collections')
+      .update(updateObj as any)
+      .eq('id', id);
     if (error) throw error;
   },
 
   async softDeleteCollection(id: string): Promise<void> {
     const { error } = await supabase
       .from('collections')
-      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() } as any)
       .eq('id', id);
     if (error) throw error;
   },
 
   // --- ARTIST CRUD ---
   async getArtists(): Promise<Artist[]> {
-    const { data, error } = await supabase
+    const { data, error } = (await supabase
       .from('artists')
       .select('*')
       .is('deleted_at', null)
-      .order('name', { ascending: true });
+      .order('name', { ascending: true })) as any;
     if (error) throw error;
 
-    return (data || []).map((art) => ({
+    return (data || []).map((art: any) => ({
       id: art.id,
       slug: art.id,
       name: art.name,
@@ -659,7 +674,7 @@ export const AdminRepository = {
       profile_image_url: art.avatar,
       specialties: art.mediums,
       curator_statement: art.statement,
-    });
+    } as any);
     if (error) throw error;
   },
 
@@ -671,14 +686,17 @@ export const AdminRepository = {
     if (art.mediums !== undefined) updateObj.specialties = art.mediums;
     if (art.statement !== undefined) updateObj.curator_statement = art.statement;
 
-    const { error } = await supabase.from('artists').update(updateObj).eq('id', id);
+    const { error } = await supabase
+      .from('artists')
+      .update(updateObj as any)
+      .eq('id', id);
     if (error) throw error;
   },
 
   async softDeleteArtist(id: string): Promise<void> {
     const { error } = await supabase
       .from('artists')
-      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      .update({ deleted_at: new Date().toISOString(), updated_at: new Date().toISOString() } as any)
       .eq('id', id);
     if (error) throw error;
   },
@@ -689,8 +707,8 @@ export const AdminRepository = {
 
     const artworksPromise = supabase
       .from('artworks')
-      .select('id, title, artist_name, price')
-      .or(`title.ilike.%${term}%,artist_name.ilike.%${term}%`)
+      .select('id, title, artist_id, price')
+      .or(`title.ilike.%${term}%,artist_id.ilike.%${term}%`)
       .limit(5);
 
     const commissionsPromise = supabase

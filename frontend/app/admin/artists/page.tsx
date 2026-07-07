@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { UserCircle, Plus, Edit2, Trash2 } from 'lucide-react';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { AdminService } from '@/services/admin.service';
-import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
-import { Artist } from '@/types';
+
+import { Edit2, Plus, Trash2, UserCircle } from 'lucide-react';
+
+import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import AdminDataTable from '@/components/admin/AdminDataTable';
 import AdminDrawer from '@/components/admin/AdminDrawer';
-import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import LoadingButton from '@/components/ui/LoadingButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
+import { AdminService } from '@/services/admin.service';
+
+import { Artist } from '@/types';
 
 export default function AdminArtistsPage() {
   const { user } = useAuth();
@@ -162,7 +165,10 @@ export default function AdminArtistsPage() {
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full border border-primary/5 bg-[#FAF8F5] overflow-hidden relative shrink-0">
             <img
-              src={row.avatar || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'}
+              src={
+                row.avatar ||
+                'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'
+              }
               alt={val}
               className="object-cover w-full h-full"
             />

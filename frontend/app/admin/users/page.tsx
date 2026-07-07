@@ -1,23 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import {
-  Users,
-  Shield,
-  UserCheck,
-  UserX,
-  KeyRound,
-  History,
-} from 'lucide-react';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { AdminService } from '@/services/admin.service';
-import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
-import { UserProfile, Order, Commission } from '@/types';
+
+import { History, KeyRound, Shield, UserCheck, Users, UserX } from 'lucide-react';
+
+import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import AdminDataTable from '@/components/admin/AdminDataTable';
 import AdminDrawer from '@/components/admin/AdminDrawer';
-import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import LoadingButton from '@/components/ui/LoadingButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
+import { AdminService } from '@/services/admin.service';
+
+import { Commission, Order, UserProfile } from '@/types';
 
 export default function AdminUsersPage() {
   const { user } = useAuth();
@@ -34,7 +30,11 @@ export default function AdminUsersPage() {
 
   // Modal Confirm state
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [confirmTarget, setConfirmTarget] = useState<{ id: string; name: string; action: 'disable' | 'enable' | 'role' } | null>(null);
+  const [confirmTarget, setConfirmTarget] = useState<{
+    id: string;
+    name: string;
+    action: 'disable' | 'enable' | 'role';
+  } | null>(null);
 
   // Form Fields
   const [adminRole, setAdminRole] = useState('');
@@ -94,7 +94,12 @@ export default function AdminUsersPage() {
       const targetUser = users.find((u) => u.id === confirmTarget.id);
 
       if (confirmTarget.action === 'role' && targetUser) {
-        await AdminService.toggleUserRole(adminId, confirmTarget.id, targetUser.role, confirmTarget.name);
+        await AdminService.toggleUserRole(
+          adminId,
+          confirmTarget.id,
+          targetUser.role,
+          confirmTarget.name
+        );
         addToast(`User role updated successfully.`, 'success');
       } else if (confirmTarget.action === 'disable' && targetUser) {
         await AdminService.toggleUserBlock(adminId, confirmTarget.id, false, confirmTarget.name);
@@ -122,7 +127,12 @@ export default function AdminUsersPage() {
     setActionLoading(true);
     try {
       const adminId = user?.id || null;
-      await AdminService.updateUserAdminRole(adminId, selectedUser.id, adminRole || null, selectedUser.fullName);
+      await AdminService.updateUserAdminRole(
+        adminId,
+        selectedUser.id,
+        adminRole || null,
+        selectedUser.fullName
+      );
       addToast('Admin RBAC role updated.', 'success');
       setIsDrawerOpen(false);
       loadData();
@@ -165,7 +175,9 @@ export default function AdminUsersPage() {
           </div>
           <div>
             <span className="font-semibold text-primary block">{val}</span>
-            <span className="text-[10px] text-secondary/40 font-mono block">{row.id.slice(0, 8)}...</span>
+            <span className="text-[10px] text-secondary/40 font-mono block">
+              {row.id.slice(0, 8)}...
+            </span>
           </div>
         </div>
       ),
@@ -221,11 +233,17 @@ export default function AdminUsersPage() {
           <button
             onClick={() => handleToggleBlockClick(row)}
             className={`p-1.5 border rounded bg-white transition-all duration-150 ${
-              row.deletedAt ? 'hover:text-green-600 border-green-200 text-green-600' : 'hover:text-red-500 border-primary/5'
+              row.deletedAt
+                ? 'hover:text-green-600 border-green-200 text-green-600'
+                : 'hover:text-red-500 border-primary/5'
             }`}
             title={row.deletedAt ? 'Enable User' : 'Disable User'}
           >
-            {row.deletedAt ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
+            {row.deletedAt ? (
+              <UserCheck className="w-3.5 h-3.5" />
+            ) : (
+              <UserX className="w-3.5 h-3.5" />
+            )}
           </button>
         </div>
       ),
@@ -292,13 +310,17 @@ export default function AdminUsersPage() {
                   <span className="text-[9px] uppercase tracking-wider text-secondary/50 block mb-0.5">
                     Register Date
                   </span>
-                  <div className="text-primary">{new Date(selectedUser.createdAt).toLocaleDateString()}</div>
+                  <div className="text-primary">
+                    {new Date(selectedUser.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
                 <div>
                   <span className="text-[9px] uppercase tracking-wider text-secondary/50 block mb-0.5">
                     Last Update
                   </span>
-                  <div className="text-primary">{new Date(selectedUser.updatedAt).toLocaleDateString()}</div>
+                  <div className="text-primary">
+                    {new Date(selectedUser.updatedAt).toLocaleDateString()}
+                  </div>
                 </div>
               </div>
             </div>
@@ -343,9 +365,13 @@ export default function AdminUsersPage() {
                     <option value="">No Special RBAC Permissions (General Admin)</option>
                     <option value="super_admin">Super Admin (All operations)</option>
                     <option value="gallery_manager">Gallery Manager (Artwork catalog CRUD)</option>
-                    <option value="commission_manager">Commission Manager (Quotes and status)</option>
+                    <option value="commission_manager">
+                      Commission Manager (Quotes and status)
+                    </option>
                     <option value="support">Customer Support (User registry and orders)</option>
-                    <option value="content_editor">Content Editor (Banners, metadata, collections)</option>
+                    <option value="content_editor">
+                      Content Editor (Banners, metadata, collections)
+                    </option>
                   </select>
                   <button
                     type="button"
@@ -368,16 +394,25 @@ export default function AdminUsersPage() {
                 <div className="divide-y divide-primary/5 max-h-[200px] overflow-y-auto pr-1">
                   {userOrders.length > 0 ? (
                     userOrders.map((ord) => (
-                      <div key={ord.id} className="py-2 flex justify-between items-center text-[10px]">
+                      <div
+                        key={ord.id}
+                        className="py-2 flex justify-between items-center text-[10px]"
+                      >
                         <div>
                           <div className="font-semibold text-primary">#{ord.id.slice(0, 8)}</div>
-                          <div className="text-secondary/60">{new Date(ord.createdAt).toLocaleDateString()}</div>
+                          <div className="text-secondary/60">
+                            {new Date(ord.createdAt).toLocaleDateString()}
+                          </div>
                         </div>
-                        <span className="font-medium text-accent">${ord.total.toLocaleString()}</span>
+                        <span className="font-medium text-accent">
+                          ${ord.total.toLocaleString()}
+                        </span>
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-6 text-secondary/40 font-light">No acquisitions yet</div>
+                    <div className="text-center py-6 text-secondary/40 font-light">
+                      No acquisitions yet
+                    </div>
                   )}
                 </div>
               </div>
@@ -390,7 +425,10 @@ export default function AdminUsersPage() {
                 <div className="divide-y divide-primary/5 max-h-[200px] overflow-y-auto pr-1">
                   {userCommissions.length > 0 ? (
                     userCommissions.map((comm) => (
-                      <div key={comm.id} className="py-2 flex justify-between items-center text-[10px]">
+                      <div
+                        key={comm.id}
+                        className="py-2 flex justify-between items-center text-[10px]"
+                      >
                         <div>
                           <div className="font-semibold text-primary">{comm.title}</div>
                           <div className="text-secondary/60">Budget: ${comm.customerBudget}</div>
@@ -401,7 +439,9 @@ export default function AdminUsersPage() {
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-6 text-secondary/40 font-light">No commission records</div>
+                    <div className="text-center py-6 text-secondary/40 font-light">
+                      No commission records
+                    </div>
                   )}
                 </div>
               </div>
@@ -417,15 +457,15 @@ export default function AdminUsersPage() {
           confirmTarget?.action === 'role'
             ? 'Toggle Administrative Role?'
             : confirmTarget?.action === 'disable'
-            ? 'Disable User Account?'
-            : 'Enable User Account?'
+              ? 'Disable User Account?'
+              : 'Enable User Account?'
         }
         message={
           confirmTarget?.action === 'role'
             ? `Are you sure you want to alter the administrator authorization for "${confirmTarget?.name}"?`
             : confirmTarget?.action === 'disable'
-            ? `Are you sure you want to disable "${confirmTarget?.name}"'s account? They will lose store login privileges.`
-            : `Are you sure you want to enable "${confirmTarget?.name}"'s account?`
+              ? `Are you sure you want to disable "${confirmTarget?.name}"'s account? They will lose store login privileges.`
+              : `Are you sure you want to enable "${confirmTarget?.name}"'s account?`
         }
         onConfirm={handleConfirmAction}
         onCancel={() => setIsConfirmOpen(false)}

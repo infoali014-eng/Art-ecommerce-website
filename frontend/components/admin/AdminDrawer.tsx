@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+
 import { X } from 'lucide-react';
 
 interface AdminDrawerProps {
@@ -37,9 +38,7 @@ export default function AdminDrawer({ isOpen, title, onClose, children }: AdminD
         </div>
 
         {/* Scrollable Form Content */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">{children}</div>
       </div>
     </div>
   );

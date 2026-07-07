@@ -1,23 +1,27 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 import {
-  Search,
   Bell,
   CheckCircle,
-  Menu,
   ChevronLeft,
   ChevronRight,
   HardDrive,
   HeartHandshake,
+  Menu,
+  Paintbrush,
+  Search,
   ShoppingCart,
   Users,
-  Paintbrush,
 } from 'lucide-react';
+
 import { useAuth } from '@/hooks/useAuth';
 import { AdminRepository } from '@/repositories/admin.repository';
+
 import { Notification } from '@/types';
 
 interface AdminNavbarProps {
@@ -172,7 +176,9 @@ export default function AdminNavbar({ onMenuClick, collapsed, setCollapsed }: Ad
                     className="block px-2 py-1.5 hover:bg-[#FAF8F5] rounded text-xs text-primary transition-colors duration-150"
                   >
                     <span className="font-medium">{art.title}</span>{' '}
-                    <span className="text-[10px] text-secondary font-light">by {art.artist_name}</span>
+                    <span className="text-[10px] text-secondary font-light">
+                      by {art.artist_name}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -214,7 +220,9 @@ export default function AdminNavbar({ onMenuClick, collapsed, setCollapsed }: Ad
                     className="block px-2 py-1.5 hover:bg-[#FAF8F5] rounded text-xs text-primary transition-colors duration-150"
                   >
                     <span className="font-medium">{ord.customer_name}</span>{' '}
-                    <span className="text-[10px] text-secondary font-light">({ord.customer_email})</span>
+                    <span className="text-[10px] text-secondary font-light">
+                      ({ord.customer_email})
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -240,14 +248,14 @@ export default function AdminNavbar({ onMenuClick, collapsed, setCollapsed }: Ad
             )}
 
             {/* Empty check */}
-            {(!searchResults.artworks?.length &&
+            {!searchResults.artworks?.length &&
               !searchResults.commissions?.length &&
               !searchResults.orders?.length &&
-              !searchResults.artists?.length) && (
-              <div className="text-center py-6 text-xs text-secondary/60">
-                No matching results found
-              </div>
-            )}
+              !searchResults.artists?.length && (
+                <div className="text-center py-6 text-xs text-secondary/60">
+                  No matching results found
+                </div>
+              )}
           </div>
         )}
       </div>

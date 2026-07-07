@@ -1,25 +1,19 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Paintbrush,
-  Plus,
-  Edit2,
-  Trash2,
-  Archive,
-  RefreshCw,
-  Copy,
-  Eye,
-} from 'lucide-react';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { AdminService } from '@/services/admin.service';
-import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
-import { Artwork, Category, Collection, Artist } from '@/types';
+
+import { Archive, Copy, Edit2, Eye, Paintbrush, Plus, RefreshCw, Trash2 } from 'lucide-react';
+
+import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import AdminDataTable from '@/components/admin/AdminDataTable';
 import AdminDrawer from '@/components/admin/AdminDrawer';
-import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import LoadingButton from '@/components/ui/LoadingButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
+import { AdminService } from '@/services/admin.service';
+
+import { Artist, Artwork, Category, Collection } from '@/types';
 
 export default function AdminArtworksPage() {
   const { user } = useAuth();
@@ -39,7 +33,11 @@ export default function AdminArtworksPage() {
 
   // Modal confirm state
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [confirmTarget, setConfirmTarget] = useState<{ id: string; title: string; action: 'archive' | 'restore' } | null>(null);
+  const [confirmTarget, setConfirmTarget] = useState<{
+    id: string;
+    title: string;
+    action: 'archive' | 'restore';
+  } | null>(null);
 
   // Form Fields
   const [title, setTitle] = useState('');
@@ -244,7 +242,10 @@ export default function AdminArtworksPage() {
       framingAvailable,
       estimatedDelivery,
       tags: parsedTags,
-      images: filteredImages.length > 0 ? filteredImages : ['https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'],
+      images:
+        filteredImages.length > 0
+          ? filteredImages
+          : ['https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'],
       collection: collectionId || undefined,
       year: Number(year),
     };
@@ -286,7 +287,12 @@ export default function AdminArtworksPage() {
     try {
       const adminId = user?.id || null;
       const isArchived = confirmTarget.action === 'restore'; // True if we are restoring
-      await AdminService.toggleArtworkArchive(adminId, confirmTarget.id, confirmTarget.title, isArchived);
+      await AdminService.toggleArtworkArchive(
+        adminId,
+        confirmTarget.id,
+        confirmTarget.title,
+        isArchived
+      );
       addToast(
         `Artwork "${confirmTarget.title}" ${
           confirmTarget.action === 'archive' ? 'archived' : 'restored'
@@ -347,7 +353,10 @@ export default function AdminArtworksPage() {
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-primary/5 border border-primary/5 rounded overflow-hidden relative shrink-0">
             <img
-              src={row.images[0] || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'}
+              src={
+                row.images[0] ||
+                'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800'
+              }
               alt={val}
               className="object-cover w-full h-full"
             />
@@ -364,7 +373,9 @@ export default function AdminArtworksPage() {
       key: 'price',
       label: 'Price',
       sortable: true,
-      render: (val: number) => <span className="font-medium text-accent">${val.toLocaleString()}</span>,
+      render: (val: number) => (
+        <span className="font-medium text-accent">${val.toLocaleString()}</span>
+      ),
     },
     {
       key: 'category',
@@ -382,8 +393,8 @@ export default function AdminArtworksPage() {
             val === 'available'
               ? 'bg-green-50 text-green-700 border border-green-100'
               : val === 'sold'
-              ? 'bg-red-50 text-red-700 border border-red-100'
-              : 'bg-amber-50 text-amber-700 border border-amber-100'
+                ? 'bg-red-50 text-red-700 border border-red-100'
+                : 'bg-amber-50 text-amber-700 border border-amber-100'
           }`}
         >
           {val}
@@ -420,7 +431,11 @@ export default function AdminArtworksPage() {
               }`}
               title={isSoftDeleted ? 'Restore artwork' : 'Archive artwork'}
             >
-              {isSoftDeleted ? <RefreshCw className="w-3.5 h-3.5 animate-spin-hover" /> : <Archive className="w-3.5 h-3.5" />}
+              {isSoftDeleted ? (
+                <RefreshCw className="w-3.5 h-3.5 animate-spin-hover" />
+              ) : (
+                <Archive className="w-3.5 h-3.5" />
+              )}
             </button>
           </div>
         );
@@ -474,7 +489,9 @@ export default function AdminArtworksPage() {
       {loading ? (
         <div className="bg-white p-12 border border-primary/5 rounded text-center flex flex-col items-center justify-center min-h-[300px]">
           <div className="w-8 h-8 border-2 border-accent/20 border-t-accent rounded-full animate-spin mb-4" />
-          <span className="text-xs text-secondary/60 font-light">Loading masterworks database...</span>
+          <span className="text-xs text-secondary/60 font-light">
+            Loading masterworks database...
+          </span>
         </div>
       ) : (
         <AdminDataTable

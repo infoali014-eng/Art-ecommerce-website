@@ -1,15 +1,10 @@
 import { AdminRepository } from '@/repositories/admin.repository';
+
 import { Artist, Artwork, Category, Collection, SiteSettings } from '@/types';
 
 export const AdminService = {
   // Log helper wrapper
-  async log(
-    adminId: string | null,
-    action: string,
-    target: string,
-    prevObj?: any,
-    newObj?: any
-  ) {
+  async log(adminId: string | null, action: string, target: string, prevObj?: any, newObj?: any) {
     try {
       await AdminRepository.logActivity(adminId, action, target, prevObj, newObj);
     } catch (e) {
@@ -73,7 +68,12 @@ export const AdminService = {
     await this.log(adminId, 'Artwork Updated', artwork.title || id, null, artwork);
   },
 
-  async toggleArtworkArchive(adminId: string | null, id: string, title: string, isArchived: boolean) {
+  async toggleArtworkArchive(
+    adminId: string | null,
+    id: string,
+    title: string,
+    isArchived: boolean
+  ) {
     if (isArchived) {
       await AdminRepository.restoreArtwork(id);
       await this.log(adminId, 'Artwork Restored', title);
@@ -178,13 +178,9 @@ export const AdminService = {
     artistName: string
   ) {
     await AdminRepository.assignArtistToCommission(commissionId, artistId);
-    await this.log(
-      adminId,
-      'Commission Assigned Artist',
-      `Commission ${commissionId}`,
-      null,
-      { artistName }
-    );
+    await this.log(adminId, 'Commission Assigned Artist', `Commission ${commissionId}`, null, {
+      artistName,
+    });
   },
 
   async sendCommissionQuote(

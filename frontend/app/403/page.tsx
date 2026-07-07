@@ -1,8 +1,11 @@
 'use client';
 
 import React from 'react';
+
 import Link from 'next/link';
+
 import { ShieldAlert } from 'lucide-react';
+
 import { Button } from '@/components/ui/Button';
 
 export default function ForbiddenPage() {
@@ -19,7 +22,8 @@ export default function ForbiddenPage() {
           Unauthorised Credentials
         </h1>
         <p className="text-secondary/70 text-xs font-light mb-8 leading-relaxed">
-          You do not have administrative permissions to access the Admin Control Center. If you believe this is in error, please contact curation support.
+          You do not have administrative permissions to access the Admin Control Center. If you
+          believe this is in error, please contact curation support.
         </p>
         <div className="flex flex-col space-y-2">
           <Link href="/">

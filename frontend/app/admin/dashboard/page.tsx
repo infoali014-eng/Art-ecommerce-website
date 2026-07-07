@@ -1,24 +1,28 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import Link from 'next/link';
+
 import {
-  Users,
-  Paintbrush,
-  ShoppingCart,
-  HeartHandshake,
-  TrendingUp,
-  HardDrive,
-  PlusCircle,
   FolderOpen,
-  Settings,
+  HardDrive,
+  HeartHandshake,
+  Paintbrush,
+  PlusCircle,
   Scroll,
+  Settings,
+  ShoppingCart,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
+
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
 import { DashboardService } from '@/services/dashboard.service';
 import { StatisticsService } from '@/services/statistics.service';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { DashboardStats, AdminActivity } from '@/types';
-import { useToast } from '@/hooks/useToast';
+
+import { AdminActivity, DashboardStats } from '@/types';
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -59,7 +63,10 @@ export default function AdminDashboardPage() {
         <div className="h-10 w-48 bg-primary/5 animate-pulse rounded" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-white border border-primary/5 rounded-sm animate-pulse" />
+            <div
+              key={i}
+              className="h-28 bg-white border border-primary/5 rounded-sm animate-pulse"
+            />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -144,7 +151,11 @@ export default function AdminDashboardPage() {
               Total Revenue
             </span>
             <span className="text-2xl font-light text-accent">
-              ${stats.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              $
+              {stats.revenue.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
           </div>
           <div className="w-12 h-12 rounded-full bg-accent/5 border border-accent/10 flex items-center justify-center text-accent">
@@ -167,7 +178,10 @@ export default function AdminDashboardPage() {
             {revenueTrend.map((t) => {
               const heightPct = Math.max((t.sales / maxSales) * 100, 2);
               return (
-                <div key={t.month} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
+                <div
+                  key={t.month}
+                  className="flex-1 flex flex-col items-center gap-2 group h-full justify-end"
+                >
                   <div className="w-full relative flex justify-center">
                     {/* Tooltip on hover */}
                     <div className="absolute bottom-full mb-2 bg-[#1A1816] text-[#E5DCD3] text-[9px] px-2 py-1 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-md z-10">
@@ -201,7 +215,9 @@ export default function AdminDashboardPage() {
                 className="flex flex-col items-center justify-center p-4 border border-primary/5 hover:border-accent/40 rounded bg-[#FAF8F5] text-secondary/70 hover:text-accent transition-all duration-200 gap-2 text-center"
               >
                 <PlusCircle className="w-5 h-5 stroke-[1.4]" />
-                <span className="text-[10px] font-medium uppercase tracking-wider">Add Artwork</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider">
+                  Add Artwork
+                </span>
               </Link>
               <Link
                 href="/admin/storage"
@@ -215,7 +231,9 @@ export default function AdminDashboardPage() {
                 className="flex flex-col items-center justify-center p-4 border border-primary/5 hover:border-accent/40 rounded bg-[#FAF8F5] text-secondary/70 hover:text-accent transition-all duration-200 gap-2 text-center"
               >
                 <Settings className="w-5 h-5 stroke-[1.4]" />
-                <span className="text-[10px] font-medium uppercase tracking-wider">Site Settings</span>
+                <span className="text-[10px] font-medium uppercase tracking-wider">
+                  Site Settings
+                </span>
               </Link>
               <Link
                 href="/admin/activity"
@@ -299,7 +317,8 @@ export default function AdminDashboardPage() {
                   <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
                   <div className="space-y-0.5">
                     <p className="text-primary font-light">
-                      <span className="font-semibold">{act.adminName}</span> {act.action.toLowerCase()}{' '}
+                      <span className="font-semibold">{act.adminName}</span>{' '}
+                      {act.action.toLowerCase()}{' '}
                       <span className="font-medium text-accent">&ldquo;{act.target}&rdquo;</span>
                     </p>
                     <span className="text-[9px] text-secondary/40 font-light">

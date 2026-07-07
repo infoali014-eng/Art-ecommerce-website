@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import artistsData from '@/data/artists.json';
 import { createClient } from '@/lib/supabase/client';
 import { StorageService } from '@/services/storage.service';

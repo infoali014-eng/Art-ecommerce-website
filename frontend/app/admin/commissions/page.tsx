@@ -1,24 +1,28 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import {
-  HeartHandshake,
-  DollarSign,
-  User,
-  Calendar,
   AlertCircle,
+  Calendar,
+  DollarSign,
+  Eye,
   FileText,
+  HeartHandshake,
   Send,
+  User,
   UserCheck,
 } from 'lucide-react';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { AdminService } from '@/services/admin.service';
-import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
-import { Commission, Artist, UserProfile } from '@/types';
+
 import AdminDataTable from '@/components/admin/AdminDataTable';
 import AdminDrawer from '@/components/admin/AdminDrawer';
 import LoadingButton from '@/components/ui/LoadingButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
+import { AdminService } from '@/services/admin.service';
+
+import { Artist, Commission, UserProfile } from '@/types';
 
 export default function AdminCommissionsPage() {
   const { user } = useAuth();
@@ -202,7 +206,9 @@ export default function AdminCommissionsPage() {
       render: (val: string, row: Commission) => (
         <div>
           <span className="font-semibold text-primary block">{val}</span>
-          <span className="text-[10px] text-secondary/50 block font-light">Type: {row.artworkType}</span>
+          <span className="text-[10px] text-secondary/50 block font-light">
+            Type: {row.artworkType}
+          </span>
         </div>
       ),
     },
@@ -215,7 +221,9 @@ export default function AdminCommissionsPage() {
       key: 'customerBudget',
       label: 'Budget',
       sortable: true,
-      render: (val: number) => <span className="font-medium text-accent">${val.toLocaleString()}</span>,
+      render: (val: number) => (
+        <span className="font-medium text-accent">${val.toLocaleString()}</span>
+      ),
     },
     {
       key: 'priority',
@@ -227,8 +235,8 @@ export default function AdminCommissionsPage() {
             val === 'high'
               ? 'bg-red-50 text-red-700'
               : val === 'medium'
-              ? 'bg-amber-50 text-amber-700'
-              : 'bg-green-50 text-green-700'
+                ? 'bg-amber-50 text-amber-700'
+                : 'bg-green-50 text-green-700'
           }`}
         >
           {val}
@@ -334,13 +342,17 @@ export default function AdminCommissionsPage() {
                   <span className="text-[9px] uppercase tracking-wider text-secondary/50 block mb-0.5">
                     Collector
                   </span>
-                  <div className="font-semibold text-primary">{getCustomerName(selectedComm.userId)}</div>
+                  <div className="font-semibold text-primary">
+                    {getCustomerName(selectedComm.userId)}
+                  </div>
                 </div>
                 <div>
                   <span className="text-[9px] uppercase tracking-wider text-secondary/50 block mb-0.5">
                     Request Date
                   </span>
-                  <div className="text-primary">{new Date(selectedComm.createdAt).toLocaleDateString()}</div>
+                  <div className="text-primary">
+                    {new Date(selectedComm.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
               </div>
 
@@ -367,7 +379,8 @@ export default function AdminCommissionsPage() {
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <div>
-                    <span className="text-[10px] text-secondary/60">Type:</span> {selectedComm.artworkType}
+                    <span className="text-[10px] text-secondary/60">Type:</span>{' '}
+                    {selectedComm.artworkType}
                   </div>
                   <div>
                     <span className="text-[10px] text-secondary/60">Size:</span>{' '}
@@ -380,7 +393,8 @@ export default function AdminCommissionsPage() {
                     {selectedComm.preferredStyle || 'Custom'}
                   </div>
                   <div>
-                    <span className="text-[10px] text-secondary/60">Frame:</span> {selectedComm.frameOption}
+                    <span className="text-[10px] text-secondary/60">Frame:</span>{' '}
+                    {selectedComm.frameOption}
                   </div>
                 </div>
               </div>
@@ -410,7 +424,11 @@ export default function AdminCommissionsPage() {
                       rel="noopener noreferrer"
                       className="aspect-square border border-primary/5 bg-[#FAF8F5] rounded overflow-hidden hover:opacity-90 transition-opacity relative group block"
                     >
-                      <img src={img.imageUrl} alt="Reference" className="object-cover w-full h-full" />
+                      <img
+                        src={img.imageUrl}
+                        alt="Reference"
+                        className="object-cover w-full h-full"
+                      />
                       <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <Eye className="w-4 h-4 text-white" />
                       </div>
@@ -454,7 +472,10 @@ export default function AdminCommissionsPage() {
               </h3>
 
               {/* Status Update Form */}
-              <form onSubmit={handleUpdateStatus} className="space-y-3 border border-primary/5 p-4 rounded bg-[#FAF8F5]">
+              <form
+                onSubmit={handleUpdateStatus}
+                className="space-y-3 border border-primary/5 p-4 rounded bg-[#FAF8F5]"
+              >
                 <span className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
                   Status Pipeline Update
                 </span>
@@ -491,7 +512,10 @@ export default function AdminCommissionsPage() {
 
               {/* Send Quote Form */}
               {selectedComm.status === 'Under Review' && (
-                <form onSubmit={handleSendQuote} className="space-y-3 border border-accent/20 p-4 rounded bg-accent/5">
+                <form
+                  onSubmit={handleSendQuote}
+                  className="space-y-3 border border-accent/20 p-4 rounded bg-accent/5"
+                >
                   <span className="text-[10px] text-accent font-semibold uppercase tracking-wider block">
                     Prepare Curation Price Quote
                   </span>

@@ -1,23 +1,18 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  ShoppingCart,
-  MapPin,
-  Mail,
-  Phone,
-  Truck,
-  DollarSign,
-  Printer,
-} from 'lucide-react';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { AdminService } from '@/services/admin.service';
-import { useToast } from '@/hooks/useToast';
-import { useAuth } from '@/hooks/useAuth';
-import { Order } from '@/types';
+
+import { DollarSign, Mail, MapPin, Phone, Printer, ShoppingCart, Truck } from 'lucide-react';
+
 import AdminDataTable from '@/components/admin/AdminDataTable';
 import AdminDrawer from '@/components/admin/AdminDrawer';
 import LoadingButton from '@/components/ui/LoadingButton';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
+import { AdminService } from '@/services/admin.service';
+
+import { Order } from '@/types';
 
 export default function AdminOrdersPage() {
   const { user } = useAuth();
@@ -147,7 +142,9 @@ export default function AdminOrdersPage() {
       key: 'total',
       label: 'Total',
       sortable: true,
-      render: (val: number) => <span className="font-semibold text-accent">${val.toLocaleString()}</span>,
+      render: (val: number) => (
+        <span className="font-semibold text-accent">${val.toLocaleString()}</span>
+      ),
     },
     {
       key: 'status',
@@ -159,8 +156,8 @@ export default function AdminOrdersPage() {
             val === 'Delivered'
               ? 'bg-green-50 text-green-700 border border-green-100'
               : val === 'Cancelled'
-              ? 'bg-red-50 text-red-700 border border-red-100'
-              : 'bg-amber-50 text-amber-700 border border-amber-100'
+                ? 'bg-red-50 text-red-700 border border-red-100'
+                : 'bg-amber-50 text-amber-700 border border-amber-100'
           }`}
         >
           {val}
@@ -177,8 +174,8 @@ export default function AdminOrdersPage() {
             val === 'Paid'
               ? 'bg-green-50 text-green-700 border border-green-100'
               : val === 'Refunded'
-              ? 'bg-red-50 text-red-700 border border-red-100'
-              : 'bg-amber-50 text-amber-700 border border-amber-100'
+                ? 'bg-red-50 text-red-700 border border-red-100'
+                : 'bg-amber-50 text-amber-700 border border-amber-100'
           }`}
         >
           {val}
@@ -290,7 +287,9 @@ export default function AdminOrdersPage() {
                   <span className="text-[9px] uppercase tracking-wider text-secondary/50 block mb-0.5">
                     Order Date
                   </span>
-                  <div className="text-primary">{new Date(selectedOrder.createdAt).toLocaleDateString()}</div>
+                  <div className="text-primary">
+                    {new Date(selectedOrder.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
               </div>
 
@@ -319,7 +318,8 @@ export default function AdminOrdersPage() {
                     <div>
                       <div>{selectedOrder.shippingAddress}</div>
                       <div>
-                        {selectedOrder.shippingCity}, {selectedOrder.shippingState || ''} {selectedOrder.shippingZip}
+                        {selectedOrder.shippingCity}, {selectedOrder.shippingState || ''}{' '}
+                        {selectedOrder.shippingZip}
                       </div>
                       <div className="font-semibold uppercase tracking-wider text-[9px] text-accent mt-0.5">
                         {selectedOrder.shippingCountry}
@@ -344,7 +344,9 @@ export default function AdminOrdersPage() {
                         Frame: {item.frameOption} | Qty: {item.quantity}
                       </div>
                     </div>
-                    <span className="font-semibold text-accent">${item.price.toLocaleString()}</span>
+                    <span className="font-semibold text-accent">
+                      ${item.price.toLocaleString()}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -379,7 +381,10 @@ export default function AdminOrdersPage() {
               </h3>
 
               {/* Status Update Form */}
-              <form onSubmit={handleUpdateStatus} className="space-y-3 border border-primary/5 p-4 rounded bg-[#FAF8F5]">
+              <form
+                onSubmit={handleUpdateStatus}
+                className="space-y-3 border border-primary/5 p-4 rounded bg-[#FAF8F5]"
+              >
                 <span className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
                   Logistics Shipping Status
                 </span>
@@ -454,8 +459,12 @@ export default function AdminOrdersPage() {
                   </div>
                   <div className="text-right text-xs">
                     <div className="font-semibold text-primary">Invoice Number</div>
-                    <div className="font-mono text-secondary mb-1">#INV-{selectedOrder.id.slice(0, 8).toUpperCase()}</div>
-                    <div className="text-secondary/60">Date: {new Date(selectedOrder.createdAt).toLocaleDateString()}</div>
+                    <div className="font-mono text-secondary mb-1">
+                      #INV-{selectedOrder.id.slice(0, 8).toUpperCase()}
+                    </div>
+                    <div className="text-secondary/60">
+                      Date: {new Date(selectedOrder.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
 
@@ -467,7 +476,9 @@ export default function AdminOrdersPage() {
                     </h4>
                     <div className="text-primary font-medium">{selectedOrder.customerName}</div>
                     <div className="text-secondary">{selectedOrder.customerEmail}</div>
-                    {selectedOrder.customerPhone && <div className="text-secondary">{selectedOrder.customerPhone}</div>}
+                    {selectedOrder.customerPhone && (
+                      <div className="text-secondary">{selectedOrder.customerPhone}</div>
+                    )}
                   </div>
                   <div>
                     <h4 className="font-semibold text-[10px] uppercase tracking-wider text-secondary mb-2">
@@ -476,9 +487,12 @@ export default function AdminOrdersPage() {
                     <div className="text-secondary">
                       <div>{selectedOrder.shippingAddress}</div>
                       <div>
-                        {selectedOrder.shippingCity}, {selectedOrder.shippingState || ''} {selectedOrder.shippingZip}
+                        {selectedOrder.shippingCity}, {selectedOrder.shippingState || ''}{' '}
+                        {selectedOrder.shippingZip}
                       </div>
-                      <div className="font-semibold text-primary">{selectedOrder.shippingCountry}</div>
+                      <div className="font-semibold text-primary">
+                        {selectedOrder.shippingCountry}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -488,9 +502,15 @@ export default function AdminOrdersPage() {
                   <table className="w-full border-collapse text-left text-xs">
                     <thead>
                       <tr className="bg-[#FAF8F5] border-b border-primary">
-                        <th className="p-3 font-semibold uppercase text-[9px] tracking-wider">Item Name</th>
-                        <th className="p-3 font-semibold uppercase text-[9px] tracking-wider">Details</th>
-                        <th className="p-3 font-semibold uppercase text-[9px] tracking-wider text-right">Price</th>
+                        <th className="p-3 font-semibold uppercase text-[9px] tracking-wider">
+                          Item Name
+                        </th>
+                        <th className="p-3 font-semibold uppercase text-[9px] tracking-wider">
+                          Details
+                        </th>
+                        <th className="p-3 font-semibold uppercase text-[9px] tracking-wider text-right">
+                          Price
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-primary/5">
@@ -500,7 +520,9 @@ export default function AdminOrdersPage() {
                           <td className="p-3 text-secondary">
                             Frame: {item.frameOption} | Qty: {item.quantity}
                           </td>
-                          <td className="p-3 text-right font-medium text-accent">${item.price.toLocaleString()}</td>
+                          <td className="p-3 text-right font-medium text-accent">
+                            ${item.price.toLocaleString()}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -531,7 +553,8 @@ export default function AdminOrdersPage() {
 
                 {/* Footer notes */}
                 <div className="border-t border-primary/5 pt-8 text-center text-[10px] text-secondary/40 leading-relaxed font-light">
-                  Aura Premium Art Gallery &copy; {new Date().getFullYear()} — Thank you for your curatorial support.
+                  Aura Premium Art Gallery &copy; {new Date().getFullYear()} — Thank you for your
+                  curatorial support.
                 </div>
               </div>
             </div>

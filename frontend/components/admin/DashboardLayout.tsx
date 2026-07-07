@@ -1,29 +1,32 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
 import {
-  Menu,
-  X,
-  LayoutDashboard,
-  Paintbrush,
-  HeartHandshake,
-  ShoppingCart,
-  Users,
-  FolderTree,
-  Layers,
-  UserCircle,
-  HardDrive,
-  Scroll,
-  Settings,
   ChevronLeft,
   ChevronRight,
+  FolderTree,
+  HardDrive,
+  HeartHandshake,
+  Layers,
+  LayoutDashboard,
   LogOut,
+  Menu,
+  Paintbrush,
+  Scroll,
+  Settings,
+  ShoppingCart,
+  UserCircle,
+  Users,
+  X,
 } from 'lucide-react';
+
 import { useAuth } from '@/hooks/useAuth';
-import { AuthService } from '@/services/auth.service';
 import { useToast } from '@/hooks/useToast';
+import { AuthService } from '@/services/auth.service';
 
 interface NavItem {
   name: string;
@@ -87,7 +90,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </span>
             {(!collapsed || mobileOpen) && (
               <span className="font-cormorant text-xl font-light tracking-[0.1em] text-white">
-                AURA <span className="text-accent font-normal text-xs uppercase tracking-widest block font-sans">ADMIN</span>
+                AURA{' '}
+                <span className="text-accent font-normal text-xs uppercase tracking-widest block font-sans">
+                  ADMIN
+                </span>
               </span>
             )}
           </Link>
@@ -133,9 +139,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div className="text-xs font-medium text-white truncate">
                   {user.user_metadata?.full_name || 'Admin'}
                 </div>
-                <div className="text-[10px] text-white/40 truncate">
-                  {user.email}
-                </div>
+                <div className="text-[10px] text-white/40 truncate">{user.email}</div>
               </div>
             </div>
           )}
@@ -187,9 +191,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Content body */}
-        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">{children}</main>
       </div>
     </div>
   );

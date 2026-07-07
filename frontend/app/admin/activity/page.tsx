@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Scroll, Terminal, Shield } from 'lucide-react';
-import { AdminRepository } from '@/repositories/admin.repository';
-import { useToast } from '@/hooks/useToast';
-import { AdminActivity } from '@/types';
+
+import { Scroll, Shield, Terminal } from 'lucide-react';
+
 import AdminDataTable from '@/components/admin/AdminDataTable';
 import AdminDrawer from '@/components/admin/AdminDrawer';
+import { useToast } from '@/hooks/useToast';
+import { AdminRepository } from '@/repositories/admin.repository';
+
+import { AdminActivity } from '@/types';
 
 export default function AdminActivityPage() {
   const { addToast } = useToast();
@@ -53,7 +56,9 @@ export default function AdminActivityPage() {
           </div>
           <div>
             <span className="font-semibold text-primary block">{val}</span>
-            <span className="text-[9px] text-secondary/40 font-mono block">{row.adminId?.slice(0, 8)}...</span>
+            <span className="text-[9px] text-secondary/40 font-mono block">
+              {row.adminId?.slice(0, 8)}...
+            </span>
           </div>
         </div>
       ),
@@ -135,7 +140,9 @@ export default function AdminActivityPage() {
                 <span className="text-[9px] uppercase tracking-wider text-secondary/50 block mb-0.5">
                   Action Triggered
                 </span>
-                <div className="font-semibold text-primary text-sm uppercase">{selectedActivity.action}</div>
+                <div className="font-semibold text-primary text-sm uppercase">
+                  {selectedActivity.action}
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4 border-t border-primary/5 pt-3">
                 <div>
@@ -148,7 +155,9 @@ export default function AdminActivityPage() {
                   <span className="text-[9px] uppercase tracking-wider text-secondary/50 block mb-0.5">
                     Target Instance
                   </span>
-                  <div className="text-primary font-medium">&ldquo;{selectedActivity.target}&rdquo;</div>
+                  <div className="text-primary font-medium">
+                    &ldquo;{selectedActivity.target}&rdquo;
+                  </div>
                 </div>
               </div>
             </div>

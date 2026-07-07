@@ -29,7 +29,7 @@ export const Navbar: React.FC = () => {
   const { itemCount, isCartOpen, setIsCartOpen } = useCart();
   const { wishlist } = useWishlist();
   const wishlistCount = wishlist.length;
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, role } = useAuth();
   const { addToast } = useToast();
 
   const handleLogout = async () => {
@@ -221,6 +221,15 @@ export const Navbar: React.FC = () => {
                     >
                       Your Profile
                     </Link>
+                    {role === 'admin' && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="block px-4 py-2 text-accent font-medium hover:bg-accent/5 transition-colors"
+                      >
+                        Admin Workspace
+                      </Link>
+                    )}
                     <Link
                       href="/orders"
                       onClick={() => setProfileDropdownOpen(false)}
@@ -389,6 +398,15 @@ export const Navbar: React.FC = () => {
                 >
                   Your Profile
                 </Link>
+                {role === 'admin' && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="font-sans text-xs uppercase tracking-widest text-accent font-medium hover:text-accent transition-colors"
+                  >
+                    Admin Workspace
+                  </Link>
+                )}
                 <Link
                   href="/orders"
                   onClick={() => setIsOpen(false)}
