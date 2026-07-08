@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -17,10 +18,7 @@ interface QuickViewModalProps {
 }
 
 export const QuickViewModal: React.FC<QuickViewModalProps> = ({ artwork, isOpen, onClose }) => {
-  const [success, setSuccess] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const router = useRouter();
 
   if (!artwork) return null;
 
@@ -32,16 +30,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ artwork, isOpen,
     }).format(price);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-      setName('');
-      setEmail('');
-      setMessage('');
-      onClose();
-    }, 2500);
+  const handleBuyNow = () => {
+    onClose();
+    router.push(`/checkout/${artwork.slug}`);
   };
 
   return (
@@ -121,51 +112,14 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ artwork, isOpen,
 
           {/* Form Actions */}
           <div className="mt-6 pt-4 border-t border-primary/5">
-            {success ? (
-              <div className="bg-emerald-50/50 text-emerald-800 p-4 border border-emerald-100 text-xs font-sans text-center uppercase tracking-wider">
-                Inquiry Logged. Our curator will contact you shortly.
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <h4 className="font-cormorant text-base text-primary tracking-wide font-medium">
-                  Acquisition Inquiry
-                </h4>
-                <div className="grid grid-cols-2 gap-3">
-                  <input
-                    type="text"
-                    placeholder="Your Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="bg-white border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Your Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-white border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent"
-                  />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Additional request comments (optional)..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-white border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent"
-                />
-                <Button
-                  variant="primary"
-                  size="sm"
-                  type="submit"
-                  fullWidth
-                  disabled={artwork.availability === 'sold'}
-                >
-                  {artwork.availability === 'sold' ? 'Sold Out' : 'Submit Private Request'}
-                </Button>
-              </form>
-            )}
+            <Button
+              variant="primary"
+              fullWidth
+              disabled={artwork.availability === 'sold'}
+              onClick={handleBuyNow}
+            >
+              {artwork.availability === 'sold' ? 'Sold Out' : 'Buy Now'}
+            </Button>
           </div>
         </div>
       </div>

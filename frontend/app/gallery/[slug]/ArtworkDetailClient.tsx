@@ -325,11 +325,11 @@ export const ArtworkDetailClient: React.FC<ArtworkDetailClientProps> = ({
         <div className="bg-[#FAF7F2] border border-accent/10 p-8 lg:p-12 mb-24 max-w-3xl mx-auto text-center space-y-6">
           <HelpCircle className="w-8 h-8 text-accent mx-auto stroke-[1.2]" />
           <h3 className="font-cormorant text-2xl font-light text-primary tracking-wide">
-            Acquisition Consultant Request
+            Ask About This Artwork
           </h3>
           <p className="font-sans text-xs text-secondary font-light max-w-lg mx-auto leading-relaxed">
-            Interested in acquiring this piece but have questions regarding viewing, custom framing,
-            tax, or private shipping arrangements? Contact our gallery curator office directly.
+            Interested in this piece but have questions regarding viewing, custom framing, delivery,
+            or customized details? Send us your email directly.
           </p>
 
           {inquireSuccess ? (

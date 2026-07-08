@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { motion } from 'framer-motion';
 import { Eye, Heart } from 'lucide-react';
@@ -22,8 +23,8 @@ import { Modal } from '../ui/Modal';
 import { Artwork } from '@/types';
 
 export const FeaturedCollection: React.FC = () => {
+  const router = useRouter();
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-  const [inquireSuccess, setInquireSuccess] = useState(false);
   const { isFavorite, toggleFavorite } = useFavorites();
   const { addToast } = useToast();
 
@@ -51,15 +52,6 @@ export const FeaturedCollection: React.FC = () => {
       currency: 'USD',
       maximumFractionDigits: 0,
     }).format(price);
-  };
-
-  const handleInquirySubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setInquireSuccess(true);
-    setTimeout(() => {
-      setInquireSuccess(false);
-      setSelectedArtwork(null);
-    }, 2500);
   };
 
   return (
@@ -170,7 +162,6 @@ export const FeaturedCollection: React.FC = () => {
         isOpen={selectedArtwork !== null}
         onClose={() => {
           setSelectedArtwork(null);
-          setInquireSuccess(false);
         }}
         title="Artwork Profile"
         size="lg"
@@ -232,37 +223,16 @@ export const FeaturedCollection: React.FC = () => {
                 </p>
               </div>
 
-              {/* Inquiry Form */}
-              <form onSubmit={handleInquirySubmit} className="space-y-4">
-                {inquireSuccess ? (
-                  <div className="bg-emerald-50 text-emerald-800 p-4 border border-emerald-200 text-xs font-sans text-center uppercase tracking-wider">
-                    Inquiry Sent. Our Curator will contact you shortly.
-                  </div>
-                ) : (
-                  <>
-                    <h4 className="font-cormorant text-base text-primary mb-2 tracking-wide font-medium">
-                      Request Acquisition Details
-                    </h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <input
-                        type="text"
-                        placeholder="Your Name"
-                        required
-                        className="bg-white border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent"
-                      />
-                      <input
-                        type="email"
-                        placeholder="Your Email"
-                        required
-                        className="bg-white border border-primary/10 px-3 py-2 text-xs font-sans focus:outline-none focus:border-accent"
-                      />
-                    </div>
-                    <Button variant="primary" size="sm" type="submit" fullWidth>
-                      Submit Curator Inquiry
-                    </Button>
-                  </>
-                )}
-              </form>
+              {/* Buy Now Action */}
+              <div className="pt-6">
+                <Button
+                  variant="primary"
+                  fullWidth
+                  onClick={() => router.push(`/checkout/${selectedArtwork.slug}`)}
+                >
+                  Buy Now
+                </Button>
+              </div>
             </div>
           </div>
         )}

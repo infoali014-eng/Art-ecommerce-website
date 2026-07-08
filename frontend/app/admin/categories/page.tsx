@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { AdminRepository } from '@/repositories/admin.repository';
 import { AdminService } from '@/services/admin.service';
+import { StorageService } from '@/services/storage.service';
 
 import { Category } from '@/types';
 
@@ -265,15 +266,47 @@ export default function AdminCategoriesPage() {
 
           <div className="space-y-1">
             <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
-              Curation Banner Image URL
+              Curation Banner Image URL / Upload Image
             </label>
-            <input
-              type="text"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              placeholder="https://example.com/banner.jpg"
-              className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2 focus:outline-none focus:border-accent rounded-sm"
-            />
+            <div className="flex gap-2 items-center">
+              <input
+                type="text"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                placeholder="https://example.com/banner.jpg"
+                className="flex-1 bg-[#FAF8F5] border border-primary/5 px-3 py-2 focus:outline-none focus:border-accent rounded-sm text-xs"
+              />
+              <input
+                type="file"
+                id="file-upload-category-banner"
+                className="hidden"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    setFormLoading(true);
+                    const cleanedName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9./_-]/g, '_')}`;
+                    await StorageService.uploadFile('artworks', cleanedName, file);
+                    const publicUrl = StorageService.getPublicUrl('artworks', cleanedName);
+                    setImage(publicUrl);
+                    addToast('Category banner uploaded successfully!', 'success');
+                  } catch (err) {
+                    console.error(err);
+                    addToast('Failed to upload banner image.', 'error');
+                  } finally {
+                    setFormLoading(false);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => document.getElementById('file-upload-category-banner')?.click()}
+                className="px-3 py-2 bg-primary hover:bg-accent text-white hover:text-primary transition-colors text-xs font-semibold rounded-sm cursor-pointer whitespace-nowrap"
+              >
+                Upload
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1">
