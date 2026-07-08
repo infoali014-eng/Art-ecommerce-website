@@ -105,6 +105,13 @@ export interface SiteSettings {
   maintenanceMode: boolean;
   heroTitle: string;
   heroSubtitle: string;
+  easyPaisaNumber?: string;
+  easyPaisaTitle?: string;
+  bankName?: string;
+  bankAccount?: string;
+  paymentInstructions?: string;
+  enableEasyPaisa?: boolean;
+  enableBankTransfer?: boolean;
 }
 
 export interface Order {

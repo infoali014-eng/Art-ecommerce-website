@@ -16,7 +16,7 @@ export function mapDbCollectionToUi(dbCol: any): Collection {
     name: dbCol.title,
     description: dbCol.description || '',
     image: imageUrl,
-    curatorNote: 'Exclusively curated for Aura Art patrons.',
+    curatorNote: 'Exclusively curated for Manan Art Gallery patrons.',
   };
 }
 

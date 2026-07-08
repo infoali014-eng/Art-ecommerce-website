@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import {
   ChevronLeft,
   ChevronRight,
+  CreditCard,
   FolderTree,
   HardDrive,
   HeartHandshake,
@@ -39,6 +40,7 @@ const navItems: NavItem[] = [
   { name: 'Artworks', href: '/admin/artworks', icon: Paintbrush },
   { name: 'Commissions', href: '/admin/commissions', icon: HeartHandshake },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+  { name: 'Payments', href: '/admin/payments', icon: CreditCard },
   { name: 'Users', href: '/admin/users', icon: Users },
   { name: 'Categories', href: '/admin/categories', icon: FolderTree },
   { name: 'Collections', href: '/admin/collections', icon: Layers },

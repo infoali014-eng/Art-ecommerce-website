@@ -10,7 +10,7 @@ export default function Loading() {
       <Container>
         <div className="text-center mb-12 animate-pulse">
           <span className="text-accent font-sans text-xs uppercase tracking-[0.2em] font-medium block mb-3">
-            AURA GALLERY
+            MANAN ART GALLERY
           </span>
           <h2 className="font-cormorant text-2xl font-light text-primary tracking-wide">
             Curation in progress...

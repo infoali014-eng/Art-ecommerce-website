@@ -10,7 +10,7 @@ import Loading from '../loading';
 import GalleryContent from './GalleryContent';
 
 export const metadata = {
-  title: 'Gallery Catalog | AURA Art Gallery',
+  title: 'Gallery Catalog | Manan Art Gallery',
   description:
     'Browse our complete catalog of bespoke paintings, ink calligraphy, and architectural sketches.',
 };

@@ -1,15 +1,27 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 
 import Link from 'next/link';
 
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 
 import { siteConfig } from '@/config/site';
+import { useToast } from '@/hooks/useToast';
 
 import { Container } from '../layout/Container';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const { addToast } = useToast();
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    addToast('Thank you for joining our collector newsletter!', 'success');
+    setEmail('');
+  };
 
   return (
     <footer className="bg-primary text-background border-t border-white/5 pt-20 pb-10">
@@ -133,27 +145,33 @@ export const Footer: React.FC = () => {
                 Twitter
               </a>
             </div>
-            <div className="pt-2">
+            <form onSubmit={handleSubscribe} className="pt-2">
               <h5 className="font-sans text-[10px] uppercase tracking-widest text-background/50 mb-3 font-medium">
                 Curator&apos;s Newsletter
               </h5>
               <div className="flex">
                 <input
                   type="email"
+                  required
                   placeholder="Enter email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-white/5 border border-white/10 px-4 py-2.5 text-xs text-background focus:outline-none focus:border-accent w-full"
                 />
-                <button className="bg-accent text-primary px-4 text-xs uppercase tracking-wider font-semibold hover:bg-white hover:text-primary transition-all duration-300 cursor-pointer">
+                <button
+                  type="submit"
+                  className="bg-accent text-primary px-4 text-xs uppercase tracking-wider font-semibold hover:bg-white hover:text-primary transition-all duration-300 cursor-pointer"
+                >
                   Join
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
 
         {/* Bottom Line */}
         <div className="border-t border-white/5 pt-10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-background/40">
-          <p>&copy; {currentYear} AURA Gallery. All rights reserved.</p>
+          <p>&copy; {currentYear} Manan Art Gallery. All rights reserved.</p>
           <div className="flex gap-6 mt-4 sm:mt-0">
             <Link href="/privacy" className="hover:text-accent transition-colors duration-250">
               Privacy Policy

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { Globe, Mail, Phone, Save, Settings, ShieldAlert } from 'lucide-react';
+import { CreditCard, Globe, Mail, Phone, Save, Settings, ShieldAlert } from 'lucide-react';
 
 import LoadingButton from '@/components/ui/LoadingButton';
 import { useAuth } from '@/hooks/useAuth';
@@ -20,6 +20,13 @@ export default function AdminSettingsPage() {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [heroTitle, setHeroTitle] = useState('');
   const [heroSubtitle, setHeroSubtitle] = useState('');
+  const [easyPaisaNumber, setEasyPaisaNumber] = useState('');
+  const [easyPaisaTitle, setEasyPaisaTitle] = useState('');
+  const [bankName, setBankName] = useState('');
+  const [bankAccount, setBankAccount] = useState('');
+  const [paymentInstructions, setPaymentInstructions] = useState('');
+  const [enableEasyPaisa, setEnableEasyPaisa] = useState(false);
+  const [enableBankTransfer, setEnableBankTransfer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
 
@@ -33,6 +40,13 @@ export default function AdminSettingsPage() {
       setMaintenanceMode(settings.maintenanceMode);
       setHeroTitle(settings.heroTitle);
       setHeroSubtitle(settings.heroSubtitle);
+      setEasyPaisaNumber(settings.easyPaisaNumber || '');
+      setEasyPaisaTitle(settings.easyPaisaTitle || '');
+      setBankName(settings.bankName || '');
+      setBankAccount(settings.bankAccount || '');
+      setPaymentInstructions(settings.paymentInstructions || '');
+      setEnableEasyPaisa(settings.enableEasyPaisa ?? false);
+      setEnableBankTransfer(settings.enableBankTransfer ?? false);
     } catch (e) {
       console.error(e);
       addToast('Failed to load global settings configurations.', 'error');
@@ -59,6 +73,13 @@ export default function AdminSettingsPage() {
         maintenanceMode,
         heroTitle,
         heroSubtitle,
+        easyPaisaNumber,
+        easyPaisaTitle,
+        bankName,
+        bankAccount,
+        paymentInstructions,
+        enableEasyPaisa,
+        enableBankTransfer,
       });
       addToast('Site settings updated successfully.', 'success');
       loadData();
@@ -177,6 +198,118 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setHeroSubtitle(e.target.value)}
                 className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2.5 focus:outline-none focus:border-accent rounded-sm resize-none font-sans"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Configurations */}
+        <div className="space-y-4">
+          <h3 className="font-cormorant text-lg text-primary font-medium tracking-wide border-b border-primary/5 pb-2 flex items-center pt-2">
+            <CreditCard className="w-4 h-4 mr-2 text-accent stroke-[1.5]" />
+            <span>Payment & Checkout Configurations</span>
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
+                EasyPaisa Account Title
+              </label>
+              <input
+                type="text"
+                value={easyPaisaTitle}
+                onChange={(e) => setEasyPaisaTitle(e.target.value)}
+                className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2.5 focus:outline-none focus:border-accent rounded-sm font-sans"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
+                EasyPaisa Mobile Account Number
+              </label>
+              <input
+                type="text"
+                value={easyPaisaNumber}
+                onChange={(e) => setEasyPaisaNumber(e.target.value)}
+                className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2.5 focus:outline-none focus:border-accent rounded-sm font-sans"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
+                Bank Name
+              </label>
+              <input
+                type="text"
+                value={bankName}
+                onChange={(e) => setBankName(e.target.value)}
+                className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2.5 focus:outline-none focus:border-accent rounded-sm font-sans"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
+                Bank Account Number / IBAN
+              </label>
+              <input
+                type="text"
+                value={bankAccount}
+                onChange={(e) => setBankAccount(e.target.value)}
+                className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2.5 focus:outline-none focus:border-accent rounded-sm font-sans"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] text-secondary font-medium uppercase tracking-wider block">
+              Payment Checkout Instructions
+            </label>
+            <textarea
+              rows={3}
+              value={paymentInstructions}
+              onChange={(e) => setPaymentInstructions(e.target.value)}
+              className="w-full bg-[#FAF8F5] border border-primary/5 px-3 py-2.5 focus:outline-none focus:border-accent rounded-sm resize-none font-sans"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-2">
+            <div className="bg-[#FAF8F5] border border-primary/5 p-4 rounded flex items-center justify-between">
+              <div className="space-y-0.5">
+                <span className="font-semibold text-primary text-[11px] block">
+                  Enable EasyPaisa Payment
+                </span>
+                <p className="text-[9px] text-secondary font-light font-sans">
+                  Allows customers to pay using EasyPaisa transfer.
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={enableEasyPaisa}
+                  onChange={(e) => setEnableEasyPaisa(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-primary/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-primary/20 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
+              </label>
+            </div>
+
+            <div className="bg-[#FAF8F5] border border-primary/5 p-4 rounded flex items-center justify-between">
+              <div className="space-y-0.5">
+                <span className="font-semibold text-primary text-[11px] block">
+                  Enable Bank Transfer
+                </span>
+                <p className="text-[9px] text-secondary font-light font-sans">
+                  Allows customers to pay using direct Bank transfer.
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={enableBankTransfer}
+                  onChange={(e) => setEnableBankTransfer(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-primary/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-primary/20 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent" />
+              </label>
             </div>
           </div>
         </div>

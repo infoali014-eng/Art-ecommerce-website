@@ -9,7 +9,7 @@ import Loading from '../../loading';
 import GalleryContent from '../GalleryContent';
 
 export const metadata = {
-  title: 'Fine Sketches | AURA Art Gallery',
+  title: 'Fine Sketches | Manan Art Gallery',
   description: 'Detailed graphite drawings, architectural studies, and silverpoint works.',
 };
 

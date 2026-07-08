@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${artwork.title} | ${artwork.artist} | AURA Art Gallery`,
+    title: `${artwork.title} | ${artwork.artist} | Manan Art Gallery`,
     description: artwork.description,
     openGraph: {
       title: `${artwork.title} | ${artwork.artist}`,

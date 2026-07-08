@@ -89,7 +89,7 @@ function LoginForm() {
 
     try {
       await AuthService.login(email, password);
-      addToast('Login successful. Welcome back to Aura Art!', 'success');
+      addToast('Login successful. Welcome back to Manan Art Gallery!', 'success');
       router.push(redirectUrl);
     } catch (err) {
       const mappedMsg = AuthService.mapAuthError(err);

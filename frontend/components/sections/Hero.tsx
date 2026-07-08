@@ -19,7 +19,7 @@ export const Hero: React.FC = () => {
       <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
           src={heroBg}
-          alt="AURA Fine Art Gallery"
+          alt="Manan Art Gallery"
           fill
           priority
           className="object-cover object-center brightness-[0.65] scale-105"
@@ -35,7 +35,7 @@ export const Hero: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-accent font-sans text-xs uppercase tracking-[0.3em] mb-6 font-medium"
           >
-            AURA FINE ART GALLERY
+            MANAN ART GALLERY
           </motion.span>
 
           <motion.h1

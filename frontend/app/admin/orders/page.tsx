@@ -451,7 +451,7 @@ export default function AdminOrdersPage() {
                 <div className="flex justify-between items-start border-b-[2px] border-primary pb-6">
                   <div>
                     <h1 className="text-3xl font-light font-cormorant tracking-wide text-primary">
-                      AURA ART GALLERY
+                      MANAN ART GALLERY
                     </h1>
                     <span className="text-[10px] text-accent uppercase tracking-widest block mt-0.5">
                       Bespoke Masterwork Acquisitions Receipt
@@ -553,8 +553,7 @@ export default function AdminOrdersPage() {
 
                 {/* Footer notes */}
                 <div className="border-t border-primary/5 pt-8 text-center text-[10px] text-secondary/40 leading-relaxed font-light">
-                  Aura Premium Art Gallery &copy; {new Date().getFullYear()} — Thank you for your
-                  curatorial support.
+                  Manan Art Gallery &copy; {new Date().getFullYear()} — Thank you for your support.
                 </div>
               </div>
             </div>

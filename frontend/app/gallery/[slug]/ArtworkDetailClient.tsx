@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { ArrowLeft, Heart, HelpCircle, ShieldCheck, Truck } from 'lucide-react';
 
@@ -40,6 +41,11 @@ export const ArtworkDetailClient: React.FC<ArtworkDetailClientProps> = ({
   const { addItem, setIsCartOpen } = useCart();
   const { addToast } = useToast();
   const favorited = isFavorite(artwork.id);
+  const router = useRouter();
+
+  const handleBuyNow = () => {
+    router.push(`/checkout/${artwork.slug}?frame=${frameOption}`);
+  };
 
   const handleToggleFavorite = () => {
     toggleFavorite(artwork.id);
@@ -211,11 +217,11 @@ export const ArtworkDetailClient: React.FC<ArtworkDetailClientProps> = ({
               <Button
                 variant="primary"
                 size="lg"
-                onClick={handleAddToCart}
+                onClick={handleBuyNow}
                 disabled={artwork.availability === 'sold'}
                 className="flex-grow"
               >
-                {artwork.availability === 'sold' ? 'Sold Out' : 'Acquire Masterwork'}
+                {artwork.availability === 'sold' ? 'Sold Out' : 'Buy Now'}
               </Button>
             </div>
 

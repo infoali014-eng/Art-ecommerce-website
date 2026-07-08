@@ -19,7 +19,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitl
             href="/"
             className="font-cormorant text-3xl font-light text-primary tracking-widest uppercase hover:text-accent transition-colors"
           >
-            Aura Art
+            Manan Art Gallery
           </Link>
           <h2 className="mt-6 font-cormorant text-2xl font-light text-primary tracking-wide">
             {title}

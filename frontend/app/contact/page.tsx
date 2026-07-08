@@ -42,9 +42,9 @@ export default function ContactPage() {
                     The Gallery
                   </h3>
                   <p className="font-sans text-sm text-secondary font-light leading-relaxed tracking-wide">
-                    Located in the heart of the arts district, AURA Gallery provides a peaceful
-                    sanctuary to view masterworks in person. Private tours can be scheduled through
-                    our curator office.
+                    Located in Daska, Pakistan, Manan Art Gallery provides a peaceful sanctuary to
+                    view masterworks in person. Private visits can be scheduled through our curator
+                    office.
                   </p>
                 </div>
 

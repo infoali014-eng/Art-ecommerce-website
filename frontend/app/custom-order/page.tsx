@@ -179,7 +179,7 @@ export default function CustomOrderPage() {
         <Section padding="lg">
           <Container>
             <span className="text-accent font-sans text-xs uppercase tracking-[0.2em] font-medium block mb-4 text-center">
-              AURA CURATION INQUIRY
+              MANAN ART GALLERY - CUSTOM REQUEST
             </span>
             <h1 className="font-cormorant text-4xl sm:text-5xl font-light text-center tracking-wide mb-12 text-primary">
               Bespoke Art Commission
@@ -841,7 +841,8 @@ export default function CustomOrderPage() {
                           className="w-4 h-4 accent-accent rounded-xs border-primary/20 focus:outline-none"
                         />
                         <span>
-                          I agree to the curation review terms and estimated timeline of AURA.
+                          I agree to the custom order review terms and estimated timeline of Manan
+                          Art Gallery.
                         </span>
                       </label>
 

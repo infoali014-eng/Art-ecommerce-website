@@ -9,7 +9,7 @@ import Loading from '../../loading';
 import GalleryContent from '../GalleryContent';
 
 export const metadata = {
-  title: 'Fine Calligraphy | AURA Art Gallery',
+  title: 'Fine Calligraphy | Manan Art Gallery',
   description: 'Exquisite brush ink scripts, Japanese Sumi studies, and calligraphy prints.',
 };
 

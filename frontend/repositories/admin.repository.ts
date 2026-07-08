@@ -122,13 +122,22 @@ export const AdminRepository = {
     });
 
     return {
-      siteName: settingsMap['site_name'] || 'Aura Luxury Art Gallery',
-      contactEmail: settingsMap['contact_email'] || 'curation@auraart.com',
-      contactPhone: settingsMap['contact_phone'] || '+1 (800) 555-AURA',
+      siteName: settingsMap['site_name'] || 'Manan Art Gallery',
+      contactEmail: settingsMap['contact_email'] || 'abdulmananiqbalmughal@gmail.com',
+      contactPhone: settingsMap['contact_phone'] || '+92 325 2538104',
       maintenanceMode: settingsMap['maintenance_mode'] === 'true',
       heroTitle: settingsMap['hero_title'] || 'Acquire Timeless Masterpieces',
       heroSubtitle:
         settingsMap['hero_subtitle'] || 'Co-create with master calligraphers and modern painters.',
+      easyPaisaNumber: settingsMap['easy_paisa_number'] || '+92 325 2538104',
+      easyPaisaTitle: settingsMap['easy_paisa_title'] || 'Abdul Manan Iqbal Mughal',
+      bankName: settingsMap['bank_name'] || 'Meezan Bank',
+      bankAccount: settingsMap['bank_account'] || '',
+      paymentInstructions:
+        settingsMap['payment_instructions'] ||
+        'Transfer the amount to the EasyPaisa or Bank account and upload proof.',
+      enableEasyPaisa: settingsMap['enable_easy_paisa'] === 'true',
+      enableBankTransfer: settingsMap['enable_bank_transfer'] === 'true',
     };
   },
 
@@ -185,6 +194,69 @@ export const AdminRepository = {
         supabase.from('site_settings').upsert({
           key: 'hero_subtitle',
           value: settings.heroSubtitle,
+          updated_at: new Date().toISOString(),
+        }) as any
+      );
+    }
+    if (settings.easyPaisaNumber !== undefined) {
+      promises.push(
+        supabase.from('site_settings').upsert({
+          key: 'easy_paisa_number',
+          value: settings.easyPaisaNumber,
+          updated_at: new Date().toISOString(),
+        }) as any
+      );
+    }
+    if (settings.easyPaisaTitle !== undefined) {
+      promises.push(
+        supabase.from('site_settings').upsert({
+          key: 'easy_paisa_title',
+          value: settings.easyPaisaTitle,
+          updated_at: new Date().toISOString(),
+        }) as any
+      );
+    }
+    if (settings.bankName !== undefined) {
+      promises.push(
+        supabase.from('site_settings').upsert({
+          key: 'bank_name',
+          value: settings.bankName,
+          updated_at: new Date().toISOString(),
+        }) as any
+      );
+    }
+    if (settings.bankAccount !== undefined) {
+      promises.push(
+        supabase.from('site_settings').upsert({
+          key: 'bank_account',
+          value: settings.bankAccount,
+          updated_at: new Date().toISOString(),
+        }) as any
+      );
+    }
+    if (settings.paymentInstructions !== undefined) {
+      promises.push(
+        supabase.from('site_settings').upsert({
+          key: 'payment_instructions',
+          value: settings.paymentInstructions,
+          updated_at: new Date().toISOString(),
+        }) as any
+      );
+    }
+    if (settings.enableEasyPaisa !== undefined) {
+      promises.push(
+        supabase.from('site_settings').upsert({
+          key: 'enable_easy_paisa',
+          value: settings.enableEasyPaisa ? 'true' : 'false',
+          updated_at: new Date().toISOString(),
+        }) as any
+      );
+    }
+    if (settings.enableBankTransfer !== undefined) {
+      promises.push(
+        supabase.from('site_settings').upsert({
+          key: 'enable_bank_transfer',
+          value: settings.enableBankTransfer ? 'true' : 'false',
           updated_at: new Date().toISOString(),
         }) as any
       );

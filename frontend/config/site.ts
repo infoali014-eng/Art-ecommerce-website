@@ -5,14 +5,14 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   ogImage: '/assets/placeholders/og-image.jpg',
   links: {
-    instagram: 'https://instagram.com/manan_art_gallery',
+    instagram: 'https://instagram.com/mmi_arts',
     pinterest: 'https://pinterest.com/manan_art_gallery',
     twitter: 'https://twitter.com/manan_art',
   },
   contact: {
-    email: 'infoali014@gmail.com',
+    email: 'abdulmananiqbalmughal@gmail.com',
     phone: '+92 325 2538104',
-    address: 'Lahore, Pakistan',
-    hours: 'Mon - Sat: 10:00 AM - 10:00 PM PKT',
+    address: 'Daska, Punjab, Pakistan',
+    hours: '24/7 Online Support',
   },
 } as const;

@@ -9,7 +9,7 @@ import Loading from '../../loading';
 import GalleryContent from '../GalleryContent';
 
 export const metadata = {
-  title: 'Fine Paintings | AURA Art Gallery',
+  title: 'Fine Paintings | Manan Art Gallery',
   description:
     'Explore original oil on canvas paintings, acrylic creations, and mixed media masterworks.',
 };
