@@ -137,13 +137,11 @@ export const AdminRepository = {
 
     if (settings.siteName !== undefined) {
       promises.push(
-        supabase
-          .from('site_settings')
-          .upsert({
-            key: 'site_name',
-            value: settings.siteName,
-            updated_at: new Date().toISOString(),
-          }) as any
+        supabase.from('site_settings').upsert({
+          key: 'site_name',
+          value: settings.siteName,
+          updated_at: new Date().toISOString(),
+        }) as any
       );
     }
     if (settings.contactEmail !== undefined) {
@@ -175,13 +173,11 @@ export const AdminRepository = {
     }
     if (settings.heroTitle !== undefined) {
       promises.push(
-        supabase
-          .from('site_settings')
-          .upsert({
-            key: 'hero_title',
-            value: settings.heroTitle,
-            updated_at: new Date().toISOString(),
-          }) as any
+        supabase.from('site_settings').upsert({
+          key: 'hero_title',
+          value: settings.heroTitle,
+          updated_at: new Date().toISOString(),
+        }) as any
       );
     }
     if (settings.heroSubtitle !== undefined) {
@@ -428,7 +424,11 @@ export const AdminRepository = {
 
   // --- ARTWORK CRUD ---
   async getArtworks(showArchived: boolean = true): Promise<Artwork[]> {
-    let query = supabase.from('artworks').select('*');
+    let query = supabase.from('artworks').select(`
+      *,
+      artists(name),
+      artwork_images(image_url)
+    `);
 
     if (!showArchived) {
       query = query.is('deleted_at', null);
@@ -439,15 +439,15 @@ export const AdminRepository = {
 
     return (data || []).map((art: any) => ({
       id: art.id,
-      slug: art.id,
+      slug: art.slug || art.id,
       title: art.title,
-      artist: art.artist_name || 'Unknown Artist',
+      artist: art.artists?.name || 'Unknown Artist',
       artistId: art.artist_id || '',
       description: art.description || '',
       story: art.story || '',
       technique: art.technique || '',
       price: Number(art.price),
-      category: art.category as any,
+      category: art.category_id as any,
       medium: art.medium || '',
       dimensions: art.dimensions || '',
       orientation: art.orientation as any,
@@ -458,8 +458,8 @@ export const AdminRepository = {
       isOriginal: art.is_original,
       framingAvailable: art.framing_available,
       estimatedDelivery: art.estimated_delivery || '5-7 business days',
-      tags: art.tags || [],
-      images: art.images || [],
+      tags: [],
+      images: (art.artwork_images || []).map((img: any) => img.image_url),
       collection: art.collection_id || undefined,
       year: Number(art.year || new Date().getFullYear()),
       createdAt: art.created_at,
@@ -467,16 +467,16 @@ export const AdminRepository = {
   },
 
   async createArtwork(artwork: Omit<Artwork, 'createdAt'>): Promise<void> {
-    const { error } = await supabase.from('artworks').insert({
+    const { error: artError } = await supabase.from('artworks').insert({
       id: artwork.id,
       title: artwork.title,
-      artist_name: artwork.artist,
+      slug: artwork.id,
       artist_id: artwork.artistId || null,
       description: artwork.description,
       story: artwork.story,
       technique: artwork.technique,
       price: artwork.price,
-      category: artwork.category,
+      category_id: artwork.category,
       medium: artwork.medium,
       dimensions: artwork.dimensions,
       orientation: artwork.orientation,
@@ -487,25 +487,37 @@ export const AdminRepository = {
       is_original: artwork.isOriginal,
       framing_available: artwork.framingAvailable,
       estimated_delivery: artwork.estimatedDelivery,
-      tags: artwork.tags,
-      images: artwork.images,
       collection_id: artwork.collection || null,
-      year: artwork.year,
     });
-    if (error) throw error;
+    if (artError) throw artError;
+
+    if (artwork.images && artwork.images.length > 0) {
+      const imgPayloads = artwork.images
+        .map((img) => img.trim())
+        .filter(Boolean)
+        .map((img, idx) => ({
+          artwork_id: artwork.id,
+          image_url: img,
+          display_order: idx,
+        }));
+
+      if (imgPayloads.length > 0) {
+        const { error: imgError } = await supabase.from('artwork_images').insert(imgPayloads);
+        if (imgError) throw imgError;
+      }
+    }
   },
 
   async updateArtwork(id: string, artwork: Partial<Artwork>): Promise<void> {
     const updateObj: Record<string, any> = {};
 
     if (artwork.title !== undefined) updateObj.title = artwork.title;
-    if (artwork.artist !== undefined) updateObj.artist_name = artwork.artist;
     if (artwork.artistId !== undefined) updateObj.artist_id = artwork.artistId || null;
     if (artwork.description !== undefined) updateObj.description = artwork.description;
     if (artwork.story !== undefined) updateObj.story = artwork.story;
     if (artwork.technique !== undefined) updateObj.technique = artwork.technique;
     if (artwork.price !== undefined) updateObj.price = artwork.price;
-    if (artwork.category !== undefined) updateObj.category = artwork.category;
+    if (artwork.category !== undefined) updateObj.category_id = artwork.category;
     if (artwork.medium !== undefined) updateObj.medium = artwork.medium;
     if (artwork.dimensions !== undefined) updateObj.dimensions = artwork.dimensions;
     if (artwork.orientation !== undefined) updateObj.orientation = artwork.orientation;
@@ -518,15 +530,36 @@ export const AdminRepository = {
       updateObj.framing_available = artwork.framingAvailable;
     if (artwork.estimatedDelivery !== undefined)
       updateObj.estimated_delivery = artwork.estimatedDelivery;
-    if (artwork.tags !== undefined) updateObj.tags = artwork.tags;
-    if (artwork.images !== undefined) updateObj.images = artwork.images;
     if (artwork.collection !== undefined) updateObj.collection_id = artwork.collection || null;
-    if (artwork.year !== undefined) updateObj.year = artwork.year;
 
     updateObj.updated_at = new Date().toISOString();
 
-    const { error } = await supabase.from('artworks').update(updateObj).eq('id', id);
-    if (error) throw error;
+    if (Object.keys(updateObj).length > 1) {
+      const { error: artError } = await supabase.from('artworks').update(updateObj).eq('id', id);
+      if (artError) throw artError;
+    }
+
+    if (artwork.images !== undefined) {
+      const { error: delError } = await supabase
+        .from('artwork_images')
+        .delete()
+        .eq('artwork_id', id);
+      if (delError) throw delError;
+
+      const imgPayloads = artwork.images
+        .map((img) => img.trim())
+        .filter(Boolean)
+        .map((img, idx) => ({
+          artwork_id: id,
+          image_url: img,
+          display_order: idx,
+        }));
+
+      if (imgPayloads.length > 0) {
+        const { error: imgError } = await supabase.from('artwork_images').insert(imgPayloads);
+        if (imgError) throw imgError;
+      }
+    }
   },
 
   async softDeleteArtwork(id: string): Promise<void> {
@@ -556,7 +589,7 @@ export const AdminRepository = {
 
     return (data || []).map((c: any) => ({
       id: c.id,
-      slug: c.id,
+      slug: c.slug || c.id,
       name: c.name,
       description: c.description || '',
       image: c.image_url || '',
@@ -566,6 +599,7 @@ export const AdminRepository = {
   async createCategory(category: Category): Promise<void> {
     const { error } = await supabase.from('categories').insert({
       id: category.id,
+      slug: category.id,
       name: category.name,
       description: category.description,
       image_url: category.image,
@@ -605,31 +639,30 @@ export const AdminRepository = {
 
     return (data || []).map((col: any) => ({
       id: col.id,
-      slug: col.id,
-      name: col.name,
+      slug: col.slug || col.id,
+      name: col.title,
       description: col.description || '',
-      image: col.cover_image_url || '',
-      curatorNote: col.curator_note || undefined,
+      image: col.cover_image || '',
+      curatorNote: undefined,
     }));
   },
 
   async createCollection(col: Collection): Promise<void> {
     const { error } = await supabase.from('collections').insert({
       id: col.id,
-      name: col.name,
+      slug: col.id,
+      title: col.name,
       description: col.description,
-      cover_image_url: col.image,
-      curator_note: col.curatorNote || null,
+      cover_image: col.image,
     } as any);
     if (error) throw error;
   },
 
   async updateCollection(id: string, col: Partial<Collection>): Promise<void> {
     const updateObj: Record<string, any> = { updated_at: new Date().toISOString() };
-    if (col.name !== undefined) updateObj.name = col.name;
+    if (col.name !== undefined) updateObj.title = col.name;
     if (col.description !== undefined) updateObj.description = col.description;
-    if (col.image !== undefined) updateObj.cover_image_url = col.image;
-    if (col.curatorNote !== undefined) updateObj.curator_note = col.curatorNote || null;
+    if (col.image !== undefined) updateObj.cover_image = col.image;
 
     const { error } = await supabase
       .from('collections')
@@ -657,23 +690,23 @@ export const AdminRepository = {
 
     return (data || []).map((art: any) => ({
       id: art.id,
-      slug: art.id,
+      slug: art.slug || art.id,
       name: art.name,
-      bio: art.biography || '',
-      avatar: art.profile_image_url || '',
-      mediums: art.specialties || [],
-      statement: art.curator_statement || '',
+      bio: art.bio || '',
+      avatar: art.profile_image || '',
+      mediums: art.specialty ? art.specialty.split(',').map((s: string) => s.trim()) : [],
+      statement: '',
     }));
   },
 
   async createArtist(art: Artist): Promise<void> {
     const { error } = await supabase.from('artists').insert({
       id: art.id,
+      slug: art.id,
       name: art.name,
-      biography: art.bio,
-      profile_image_url: art.avatar,
-      specialties: art.mediums,
-      curator_statement: art.statement,
+      bio: art.bio,
+      profile_image: art.avatar,
+      specialty: Array.isArray(art.mediums) ? art.mediums.join(', ') : art.mediums || '',
     } as any);
     if (error) throw error;
   },
@@ -681,10 +714,11 @@ export const AdminRepository = {
   async updateArtist(id: string, art: Partial<Artist>): Promise<void> {
     const updateObj: Record<string, any> = { updated_at: new Date().toISOString() };
     if (art.name !== undefined) updateObj.name = art.name;
-    if (art.bio !== undefined) updateObj.biography = art.bio;
-    if (art.avatar !== undefined) updateObj.profile_image_url = art.avatar;
-    if (art.mediums !== undefined) updateObj.specialties = art.mediums;
-    if (art.statement !== undefined) updateObj.curator_statement = art.statement;
+    if (art.bio !== undefined) updateObj.bio = art.bio;
+    if (art.avatar !== undefined) updateObj.profile_image = art.avatar;
+    if (art.mediums !== undefined) {
+      updateObj.specialty = Array.isArray(art.mediums) ? art.mediums.join(', ') : art.mediums || '';
+    }
 
     const { error } = await supabase
       .from('artists')
